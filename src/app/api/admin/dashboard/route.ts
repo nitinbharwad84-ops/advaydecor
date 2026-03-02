@@ -13,12 +13,11 @@ export async function GET() {
         const { data: isAdmin } = await admin.from('admin_users').select('id').eq('id', user.id).single();
         if (!isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
-        // Parallel queries
-        const [productsRes, ordersRes, pendingRes, revenueRes, recentRes] = await Promise.all([
-            admin.from('products').select('id', { count: 'exact', head: true }),
-            admin.from('orders').select('id', { count: 'exact', head: true }),
-            admin.from('orders').select('id', { count: 'exact', head: true }).eq('status', 'Pending'),
-            admin.from('orders').select('total_amount'),
+        // Optimized: 2 queries instead of 5
+        // - get_dashboard_stats() returns revenue, order counts, product count in 1 DB call
+        // - Recent orders is a simple LIMIT 5 query
+        const [statsRes, recentRes] = await Promise.all([
+            admin.rpc('get_dashboard_stats'),
             admin.from('orders')
                 .select(`
                     id, status, total_amount, created_at,
@@ -28,14 +27,12 @@ export async function GET() {
                 .limit(5),
         ]);
 
-        const totalProducts = productsRes.count || 0;
-        const totalOrders = ordersRes.count || 0;
-        const pendingOrders = pendingRes.count || 0;
-
-        // Sum revenue
-        const revenue = (revenueRes.data || []).reduce(
-            (sum: number, o: { total_amount: number }) => sum + Number(o.total_amount), 0
-        );
+        // Parse stats from database RPC function
+        const stats = statsRes.data || { total_revenue: 0, total_orders: 0, pending_orders: 0, total_products: 0 };
+        const totalProducts = stats.total_products || 0;
+        const totalOrders = stats.total_orders || 0;
+        const pendingOrders = stats.pending_orders || 0;
+        const revenue = Number(stats.total_revenue) || 0;
 
         // Shape recent orders
         const recentOrders = (recentRes.data || []).map((o: Record<string, unknown>) => {

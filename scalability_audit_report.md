@@ -80,13 +80,6 @@
 ## ⚠️ What Can Be Improved (Not Blocking but Worth Knowing)
 
 
-### 4. 🟡 Revenue Calculation Scans All Orders
-**File:** `src/app/api/admin/dashboard/route.ts`  
-**Problem:** Dashboard fetches every single order to calculate revenue in the browser. At 50K orders, this is extremely slow and memory-intensive.  
-**Fix:** Use a Supabase RPC function with SQL `SUM()`.  
-**Fix Complexity:** 🔵 **Medium** (Requires writing an SQL function + API update)  
-**Severity:** 🟡 Medium (only affects admin, not customers)
-
 ### 5. 🟢 No CDN for Product Images
 **Problem:** Product images are served directly from Supabase Storage without a global edge network on the free tier.  
 **Fix:** Proxy through a dedicated image CDN like Cloudinary or imgix.  
@@ -128,7 +121,7 @@
 | 🔴 **1** | Replace `listUsers()` with O(1) DB lookup | 15 min | Removes biggest bottleneck | ✅ Done |
 |  **2** | Redis-based Rate Limiting (Upstash) | 2 hrs | Hardens security against bots | ✅ Done |
 | 🟡 **3** | Add database indexes (27 total now) | 10 min | Faster queries at scale | ✅ Done |
-| 🟡 **4** | Replace revenue scan with SQL `SUM()` function | 15 min | Admin dashboard stays fast | To do |
+| 🟡 **4** | Replace revenue scan with SQL `SUM()` RPC | 15 min | Admin dashboard stays fast | ✅ Done |
 | 🟢 **5** | Remove bucket existence check in upload route | 5 min | Minor cleanup | To do |
 
 ---
