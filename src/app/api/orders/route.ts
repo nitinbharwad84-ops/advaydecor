@@ -9,7 +9,7 @@ import { formatCurrency } from '@/lib/utils';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { guest_info, shipping_address, items, payment_method, shipping_fee, coupon_code } = body;
+        const { guest_info, shipping_address, items, payment_method, shipping_fee, coupon_code, razorpay_order_id } = body;
 
         if (!shipping_address || !items || items.length === 0) {
             return NextResponse.json({ error: 'Shipping address and items are required' }, { status: 400 });
@@ -118,19 +118,26 @@ export async function POST(request: Request) {
             }, { status: 409 }); // 409 Conflict
         }
 
+        // Determine order status:
+        // - COD orders → 'Pending' (confirmed immediately)
+        // - Razorpay orders → 'Awaiting Payment' (confirmed by webhook or client)
+        const isOnlinePayment = payment_method === 'Razorpay';
+        const orderStatus = isOnlinePayment ? 'Awaiting Payment' : 'Pending';
+
         // Insert order
         const { data: order, error: orderError } = await admin
             .from('orders')
             .insert({
                 user_id: user?.id || null,
                 guest_info: guest_info || null,
-                status: 'Pending',
+                status: orderStatus,
                 total_amount: totalAmount,
                 shipping_fee: shipping_fee || 0,
                 shipping_address,
                 payment_method: payment_method || 'COD',
                 coupon_code: finalCouponCode,
                 discount_amount: finalDiscount,
+                razorpay_order_id: razorpay_order_id || null,
             })
             .select()
             .single();
@@ -174,29 +181,33 @@ export async function POST(request: Request) {
         }
 
         // ========================================================
-        // DEDUCT STOCK (Only after successful order + items insert)
+        // DEDUCT STOCK (Only for confirmed orders — not 'Awaiting Payment')
+        // For Razorpay orders, stock is deducted when payment is confirmed.
         // ========================================================
-        try {
-            for (const item of items) {
-                if (item.variant_id) {
-                    await admin.rpc('decrement_stock', {
-                        p_variant_id: item.variant_id,
-                        p_quantity: item.quantity,
-                    });
+        if (!isOnlinePayment) {
+            try {
+                for (const item of items) {
+                    if (item.variant_id) {
+                        await admin.rpc('decrement_stock', {
+                            p_variant_id: item.variant_id,
+                            p_quantity: item.quantity,
+                        });
+                    }
                 }
+            } catch (stockDeductError) {
+                console.warn('Stock deduction warning (order was placed successfully):', stockDeductError);
             }
-        } catch (stockDeductError) {
-            // Log but don't fail the order — admin can reconcile manually
-            console.warn('Stock deduction warning (order was placed successfully):', stockDeductError);
         }
 
-        // --- Send Order Confirmation Email ---
-        try {
-            const customerEmail = user?.email || guest_info?.email;
-            const customerName = user?.user_metadata?.full_name || guest_info?.name || 'Customer';
+        // --- Send Order Confirmation Email (only for confirmed orders) ---
+        // For 'Awaiting Payment' orders, email is sent when payment is confirmed.
+        if (!isOnlinePayment) {
+            try {
+                const customerEmail = user?.email || guest_info?.email;
+                const customerName = user?.user_metadata?.full_name || guest_info?.name || 'Customer';
 
-            if (customerEmail) {
-                const itemsHtml = items.map((item: any) => `
+                if (customerEmail) {
+                    const itemsHtml = items.map((item: any) => `
                     <tr>
                         <td style="padding: 12px 0; border-bottom: 1px solid #f0ece4;">
                             <div style="font-weight: 600; color: #0a0a23;">${item.product_title}</div>
@@ -207,10 +218,10 @@ export async function POST(request: Request) {
                     </tr>
                 `).join('');
 
-                await sendEmail({
-                    to: customerEmail,
-                    subject: `Order Confirmed - #${order.id.substring(0, 8).toUpperCase()}`,
-                    html: `
+                    await sendEmail({
+                        to: customerEmail,
+                        subject: `Order Confirmed - #${order.id.substring(0, 8).toUpperCase()}`,
+                        html: `
                         <div style="font-family: sans-serif; padding: 20px; color: #0a0a23; max-width: 600px; margin: auto; border: 1px solid #e8e4dc; border-radius: 12px;">
                             <div style="text-align: center; margin-bottom: 24px;">
                                 <h2 style="color: #00b4d8; margin-bottom: 8px;">Thank you for your order!</h2>
@@ -272,11 +283,12 @@ export async function POST(request: Request) {
                             <p style="font-size: 12px; color: #9e9eb8; text-align: center;">© 2026 AdvayDecor. All rights reserved.</p>
                         </div>
                     `,
-                });
+                    });
+                }
+            } catch (mailErr) {
+                console.error('Order Confirmation Email Error:', mailErr);
             }
-        } catch (mailErr) {
-            console.error('Order Confirmation Email Error:', mailErr);
-        }
+        } // end: !isOnlinePayment email guard
 
         return NextResponse.json({
             success: true,
@@ -284,6 +296,34 @@ export async function POST(request: Request) {
         });
     } catch (err) {
         console.error('Error placing order:', err);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+}
+
+// PATCH: Link Razorpay order ID to an existing order
+export async function PATCH(request: Request) {
+    try {
+        const { order_id, razorpay_order_id } = await request.json();
+
+        if (!order_id || !razorpay_order_id) {
+            return NextResponse.json({ error: 'order_id and razorpay_order_id are required' }, { status: 400 });
+        }
+
+        const admin = createAdminClient();
+
+        const { error } = await admin
+            .from('orders')
+            .update({ razorpay_order_id })
+            .eq('id', order_id);
+
+        if (error) {
+            console.error('Error linking Razorpay order ID:', error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ success: true });
+    } catch (err) {
+        console.error('Error updating order:', err);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

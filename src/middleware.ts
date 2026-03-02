@@ -45,29 +45,33 @@ export async function middleware(request: NextRequest) {
     // ==============================
     if (request.method === 'POST' || request.method === 'PUT' || request.method === 'DELETE') {
         const pathname = request.nextUrl.pathname;
-        const matchedRoute = RATE_LIMITED_ROUTES.find((r) => pathname.startsWith(r.pattern));
 
-        if (matchedRoute) {
-            const ip = getClientIP(request);
-            const { profile } = matchedRoute;
-            const config = RATE_LIMITS[profile];
-            const identifier = `${ip}:${matchedRoute.pattern}`;
-            const result = rateLimit(identifier, config.maxRequests, config.windowMs);
+        // Exempt the Razorpay webhook — it's called by Razorpay's servers, not users
+        if (pathname !== '/api/razorpay/webhook') {
+            const matchedRoute = RATE_LIMITED_ROUTES.find((r) => pathname.startsWith(r.pattern));
 
-            if (result.limited) {
-                console.warn(`Rate limit hit: ${ip} on ${pathname} (profile: ${profile})`);
-                return NextResponse.json(
-                    {
-                        error: 'Too many requests. Please wait a moment and try again.',
-                    },
-                    {
-                        status: 429,
-                        headers: {
-                            'Retry-After': String(Math.ceil(result.resetIn / 1000)),
-                            'X-RateLimit-Remaining': '0',
+            if (matchedRoute) {
+                const ip = getClientIP(request);
+                const { profile } = matchedRoute;
+                const config = RATE_LIMITS[profile];
+                const identifier = `${ip}:${matchedRoute.pattern}`;
+                const result = rateLimit(identifier, config.maxRequests, config.windowMs);
+
+                if (result.limited) {
+                    console.warn(`Rate limit hit: ${ip} on ${pathname} (profile: ${profile})`);
+                    return NextResponse.json(
+                        {
+                            error: 'Too many requests. Please wait a moment and try again.',
                         },
-                    }
-                );
+                        {
+                            status: 429,
+                            headers: {
+                                'Retry-After': String(Math.ceil(result.resetIn / 1000)),
+                                'X-RateLimit-Remaining': '0',
+                            },
+                        }
+                    );
+                }
             }
         }
     }

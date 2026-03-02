@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlidersHorizontal, Grid3X3, LayoutGrid, ChevronDown, Search, X } from 'lucide-react';

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
     try {
-        const { amount, currency = 'INR', receipt } = await request.json();
+        const { amount, currency = 'INR', receipt, notes } = await request.json();
 
         if (!amount || amount <= 0) {
             return NextResponse.json({ error: 'Invalid amount' }, { status: 400 });
@@ -26,6 +26,8 @@ export async function POST(request: Request) {
                 amount: Math.round(amount * 100), // Razorpay expects amount in paise
                 currency,
                 receipt: receipt || `receipt_${Date.now()}`,
+                // Notes carry our internal order_id so the webhook can find it
+                notes: notes || {},
             }),
         });
 

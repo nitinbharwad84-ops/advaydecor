@@ -287,33 +287,93 @@ export default function CheckoutPage() {
             if (paymentMethod === 'COD') {
                 await placeOrderOnServer('COD');
             } else {
-                // Razorpay flow
+                // =============================================
+                // RAZORPAY FLOW (Webhook-Safe)
+                // =============================================
+                // Step 1: Save order BEFORE payment (status: "Awaiting Payment")
+                // Step 2: Create Razorpay order with our order_id
+                // Step 3: Customer pays
+                // Step 4: Confirm payment (client + webhook both try — idempotent)
+                // =============================================
+
                 if (!razorpayLoaded || !window.Razorpay) {
                     toast.error('Payment gateway is loading. Please try again in a moment.');
                     setIsPlacing(false);
                     return;
                 }
 
-                // 1. Create Razorpay order on our server
+                // --- Step 1: Create order in our DB (Awaiting Payment) ---
+                const orderItems = items.map((item) => ({
+                    product_id: item.product.id,
+                    variant_id: item.variant?.id || null,
+                    product_title: item.product.title,
+                    variant_name: item.variant?.variant_name || null,
+                    quantity: item.quantity,
+                    unit_price: item.variant?.price ?? item.product.base_price,
+                }));
+
+                const orderRes = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        guest_info: {
+                            name: address.full_name,
+                            email: address.email || user?.email || '',
+                            phone: address.phone,
+                        },
+                        shipping_address: address,
+                        items: orderItems,
+                        payment_method: 'Razorpay',
+                        shipping_fee: shippingFee,
+                        coupon_code: appliedCoupon?.code || null,
+                        discount_amount: appliedCoupon?.discount_amount || 0,
+                    }),
+                });
+
+                const orderData = await orderRes.json();
+
+                if (!orderRes.ok || !orderData.order_id) {
+                    if (orderData.out_of_stock?.length > 0) {
+                        orderData.out_of_stock.forEach((msg: string) => toast.error(msg, { duration: 5000 }));
+                    } else {
+                        toast.error(orderData.error || 'Failed to create order. Please try again.');
+                    }
+                    setIsPlacing(false);
+                    return;
+                }
+
+                const internalOrderId = orderData.order_id;
+
+                // --- Step 2: Create Razorpay order with our order_id in notes ---
                 const createRes = await fetch('/api/razorpay/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         amount: total,
                         receipt: `order_${Date.now()}`,
+                        notes: { order_id: internalOrderId },
                     }),
                 });
 
-                const orderData = await createRes.json();
+                const razorpayData = await createRes.json();
 
                 if (!createRes.ok) {
-                    toast.error(orderData.error || 'Could not create payment order.');
+                    toast.error(razorpayData.error || 'Could not create payment order.');
                     setIsPlacing(false);
                     return;
                 }
 
-                // 2. Open Razorpay checkout
-                // Build Razorpay method config based on admin settings
+                // Link Razorpay order ID back to our order
+                await fetch('/api/orders', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        order_id: internalOrderId,
+                        razorpay_order_id: razorpayData.order_id,
+                    }),
+                });
+
+                // --- Step 3: Open Razorpay checkout ---
                 const methodConfig: Record<string, boolean> = {};
                 if (!paymentSettings.razorpay_upi) methodConfig['upi'] = false;
                 if (!paymentSettings.razorpay_card) methodConfig['card'] = false;
@@ -322,14 +382,14 @@ export default function CheckoutPage() {
                 if (!paymentSettings.razorpay_emi) methodConfig['emi'] = false;
 
                 const options: Record<string, any> = {
-                    key: orderData.key_id,
-                    amount: orderData.amount,
-                    currency: orderData.currency,
+                    key: razorpayData.key_id,
+                    amount: razorpayData.amount,
+                    currency: razorpayData.currency,
                     name: 'Advay Decor',
                     description: 'Order Payment',
-                    order_id: orderData.order_id,
+                    order_id: razorpayData.order_id,
                     handler: async (response: any) => {
-                        // 3. Verify payment on our server
+                        // --- Step 4: Verify + Confirm payment ---
                         try {
                             const verifyRes = await fetch('/api/razorpay/verify-payment', {
                                 method: 'POST',
@@ -344,8 +404,19 @@ export default function CheckoutPage() {
                             const verifyData = await verifyRes.json();
 
                             if (verifyRes.ok && verifyData.success) {
-                                // 4. Place order on server
-                                await placeOrderOnServer('Razorpay', response.razorpay_payment_id);
+                                // Confirm payment (stock deduction + email happens here)
+                                await fetch('/api/orders/confirm-payment', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        order_id: internalOrderId,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                    }),
+                                });
+
+                                setOrderId(internalOrderId.substring(0, 8).toUpperCase());
+                                setStep('confirmation');
+                                clearCart();
                             } else {
                                 toast.error('Payment verification failed. Please contact support.');
                             }
