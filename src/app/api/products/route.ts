@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
 
 // Public API — returns only active products
+// Cache settings: Revalidate every 60 seconds
+export const revalidate = 60;
+
 export async function GET() {
     try {
         const supabase = createAdminClient();
@@ -35,7 +38,11 @@ export async function GET() {
             };
         });
 
-        return NextResponse.json(shaped);
+        return NextResponse.json(shaped, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=59'
+            }
+        });
     } catch (err) {
         console.error('Error fetching public products:', err);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
