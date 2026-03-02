@@ -92,12 +92,7 @@
 **Fix Complexity:** 🔵 **Medium** (Requires scheduling/cron setup)  
 **Severity:** 🟢 Low (no business impact)
 
-### 7. 🟢 Upload Route Checks Bucket Existence on Every Upload
-**File:** `src/app/api/admin/upload/route.ts`  
-**Problem:** Every upload calls `listBuckets()` to check if the folder exists, which is an unnecessary API call.  
-**Fix:** Remove the check; the bucket should already exist.  
-**Fix Complexity:** 🟡 **Very Low** (Deleting 4 lines of code)  
-**Severity:** 🟢 Low (minor extra API call)
+
 
 ---
 
@@ -122,7 +117,7 @@
 |  **2** | Redis-based Rate Limiting (Upstash) | 2 hrs | Hardens security against bots | ✅ Done |
 | 🟡 **3** | Add database indexes (27 total now) | 10 min | Faster queries at scale | ✅ Done |
 | 🟡 **4** | Replace revenue scan with SQL `SUM()` RPC | 15 min | Admin dashboard stays fast | ✅ Done |
-| 🟢 **5** | Remove bucket existence check in upload route | 5 min | Minor cleanup | To do |
+| 🟢 **5** | Remove bucket existence check in upload route | 5 min | Minor cleanup | ✅ Done |
 
 ---
 

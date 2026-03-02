@@ -33,13 +33,7 @@ export async function POST(req: Request) {
 
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
 
-        // Check if bucket exists, if not create it
-        const { data: buckets } = await admin.storage.listBuckets();
-        if (!buckets?.find(b => b.name === 'product-images')) {
-            await admin.storage.createBucket('product-images', { public: true });
-        }
-
-        // Upload to Supabase Storage
+        // Upload to Supabase Storage (bucket created by schema — no check needed)
         const { data, error } = await admin.storage
             .from('product-images')
             .upload(fileName, buffer, {
