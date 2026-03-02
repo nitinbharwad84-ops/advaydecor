@@ -80,14 +80,6 @@
 ## ⚠️ What Can Be Improved (Not Blocking but Worth Knowing)
 
 
-### 2. 🟡 In-Memory Rate Limiting Resets on Cold Starts
-**File:** `src/lib/rate-limit.ts`  
-**Problem:** The rate limit store is in-memory, which means it resets whenever Vercel spins up a new serverless instance. A determined attacker can bypass it by waiting for cold starts.  
-**Impact:** Bots can get brief windows of unthrottled access after a cold start.  
-**Fix:** For production upgrades, integrate Upstash Redis ($0 for 10K commands/day).  
-**Fix Complexity:** 🟣 **Advanced** (Requires external DB setup + new logic)  
-**Severity:** 🟡 Medium (existing setup handles 95% of cases)
-
 ### 3. 🟡 No Database Indexes on Frequently Queried Columns
 **Problem:** There may be no explicit indexes on columns like `orders.status`, `product_reviews.product_id`, or `orders.user_id`.  
 **Fix:** Add indexes in Supabase SQL Editor: `CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);` etc.  
@@ -140,9 +132,10 @@
 | Priority | Fix | Effort | Impact | Status |
 |:---:|:---|:---:|:---:|:---:|
 | 🔴 **1** | Replace `listUsers()` with O(1) DB lookup | 15 min | Removes biggest bottleneck | ✅ Done |
-| 🟡 **2** | Add database indexes on orders, reviews, order_items | 10 min | Faster queries at scale | To do |
-| 🟡 **3** | Replace revenue scan with SQL `SUM()` function | 15 min | Admin dashboard stays fast | To do |
-| 🟢 **4** | Remove bucket existence check in upload route | 5 min | Minor cleanup | To do |
+| � **2** | Redis-based Rate Limiting (Upstash) | 2 hrs | Hardens security against bots | ✅ Done |
+| �🟡 **3** | Add database indexes on orders, reviews, order_items | 10 min | Faster queries at scale | To do |
+| 🟡 **4** | Replace revenue scan with SQL `SUM()` function | 15 min | Admin dashboard stays fast | To do |
+| 🟢 **5** | Remove bucket existence check in upload route | 5 min | Minor cleanup | To do |
 
 ---
 

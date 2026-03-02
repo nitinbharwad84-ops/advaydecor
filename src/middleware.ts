@@ -55,7 +55,9 @@ export async function middleware(request: NextRequest) {
                 const { profile } = matchedRoute;
                 const config = RATE_LIMITS[profile];
                 const identifier = `${ip}:${matchedRoute.pattern}`;
-                const result = rateLimit(identifier, config.maxRequests, config.windowMs);
+
+                // Optimized O(1) rate limiting check (Redis + In-Memory Fallback)
+                const result = await rateLimit(identifier, config.maxRequests, config.windowMs);
 
                 if (result.limited) {
                     console.warn(`Rate limit hit: ${ip} on ${pathname} (profile: ${profile})`);
