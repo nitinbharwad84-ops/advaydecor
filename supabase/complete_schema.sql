@@ -1,15 +1,19 @@
 -- =====================================================================
--- AdvayDecor — COMPLETE DATABASE MASTER SCHEMA (Project-Aligned)
+-- AdvayDecor — COMPLETE DATABASE SCHEMA (Single-File)
 -- =====================================================================
--- Run this in your Supabase SQL Editor.
--- Safe to re-run: It creates tables if missing AND patches existing ones.
+-- This is the ONLY SQL file you need to run on a FRESH Supabase project.
+-- It creates ALL tables, functions, triggers, indexes, RLS policies,
+-- seed data, storage bucket, and the initial setup.
+-- 
+-- ⚠️  RUN THIS IN: Supabase Dashboard → SQL Editor → New Query → Paste → Run
 -- =====================================================================
 
--- =============================================
--- SECTION 1: CORE TABLES
--- =============================================
 
--- Profiles
+-- =====================================================================
+-- SECTION 1: TABLES (17 Total)
+-- =====================================================================
+
+-- 1. PROFILES (Website Customers ONLY — NOT admins)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT NOT NULL,
@@ -18,7 +22,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Admin Users
+-- Add unique constraint on phone (allows NULL but prevents duplicates)
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'unique_phone') THEN
+    ALTER TABLE public.profiles ADD CONSTRAINT unique_phone UNIQUE (phone);
+  END IF;
+END $$;
+
+-- 2. ADMIN_USERS (Admin accounts — completely separate from customers)
 CREATE TABLE IF NOT EXISTS public.admin_users (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
@@ -29,7 +40,7 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
   created_by UUID REFERENCES auth.users(id)
 );
 
--- Categories
+-- 3. CATEGORIES
 CREATE TABLE IF NOT EXISTS public.categories (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
@@ -40,7 +51,7 @@ CREATE TABLE IF NOT EXISTS public.categories (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Products
+-- 4. PRODUCTS (Parent Items)
 CREATE TABLE IF NOT EXISTS public.products (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
@@ -55,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.products (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Variants
+-- 5. PRODUCT VARIANTS (Child Items — e.g. Size, Color)
 CREATE TABLE IF NOT EXISTS public.product_variants (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   parent_product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
@@ -66,7 +77,7 @@ CREATE TABLE IF NOT EXISTS public.product_variants (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Images
+-- 6. PRODUCT IMAGES
 CREATE TABLE IF NOT EXISTS public.product_images (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
@@ -75,16 +86,24 @@ CREATE TABLE IF NOT EXISTS public.product_images (
   display_order INTEGER DEFAULT 0
 );
 
--- Orders
+-- 7. SITE CONFIG (Global Settings)
+CREATE TABLE IF NOT EXISTS public.site_config (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  key TEXT UNIQUE NOT NULL,
+  value TEXT NOT NULL,
+  description TEXT
+);
+
+-- 8. ORDERS
 CREATE TABLE IF NOT EXISTS public.orders (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id),
   guest_info JSONB,
-  status TEXT DEFAULT 'Pending', -- Constraint added in patching section below
+  status TEXT DEFAULT 'Pending' CHECK (status IN ('Awaiting Payment', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned')),
   total_amount DECIMAL(10,2) NOT NULL,
   shipping_fee DECIMAL(10,2) DEFAULT 0,
   shipping_address JSONB NOT NULL,
-  payment_method TEXT DEFAULT 'COD',
+  payment_method TEXT DEFAULT 'COD' CHECK (payment_method IN ('COD', 'Razorpay')),
   payment_id TEXT,
   razorpay_order_id TEXT,
   razorpay_payment_id TEXT,
@@ -93,7 +112,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Order Items
+-- 9. ORDER ITEMS
 CREATE TABLE IF NOT EXISTS public.order_items (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   order_id UUID REFERENCES orders(id) ON DELETE CASCADE NOT NULL,
@@ -106,15 +125,7 @@ CREATE TABLE IF NOT EXISTS public.order_items (
   total_price DECIMAL(10,2) NOT NULL
 );
 
--- Site Config
-CREATE TABLE IF NOT EXISTS public.site_config (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  key TEXT UNIQUE NOT NULL,
-  value TEXT NOT NULL,
-  description TEXT
-);
-
--- OTPs
+-- 10. EMAIL VERIFICATION OTPs (8-digit)
 CREATE TABLE IF NOT EXISTS public.email_verification_otps (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT NOT NULL,
@@ -123,7 +134,16 @@ CREATE TABLE IF NOT EXISTS public.email_verification_otps (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Addresses
+-- 11. PHONE VERIFICATION OTPs (6-digit)
+CREATE TABLE IF NOT EXISTS public.phone_verification_otps (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  phone TEXT NOT NULL,
+  otp TEXT NOT NULL,
+  expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '10 minutes'),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 12. USER ADDRESSES (Saved Shipping Addresses)
 CREATE TABLE IF NOT EXISTS public.user_addresses (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -139,7 +159,7 @@ CREATE TABLE IF NOT EXISTS public.user_addresses (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Reviews
+-- 13. PRODUCT REVIEWS
 CREATE TABLE IF NOT EXISTS public.product_reviews (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
@@ -152,12 +172,61 @@ CREATE TABLE IF NOT EXISTS public.product_reviews (
   UNIQUE(product_id, user_id)
 );
 
+-- 14. WISHLISTS
+CREATE TABLE IF NOT EXISTS public.wishlists (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, product_id)
+);
 
--- =============================================
--- SECTION 2: FUNCTIONS & RPCs (Aligned with API)
--- =============================================
+-- 15. CONTACT MESSAGES
+CREATE TABLE IF NOT EXISTS public.contact_messages (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  message TEXT NOT NULL,
+  status TEXT DEFAULT 'new' CHECK (status IN ('new', 'read', 'replied')),
+  reply_text TEXT,
+  replied_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
--- Security: is_admin
+-- 16. FAQ QUESTIONS
+CREATE TABLE IF NOT EXISTS public.faq_questions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  question TEXT NOT NULL,
+  status TEXT DEFAULT 'new' CHECK (status IN ('new', 'read', 'replied')),
+  answer_text TEXT,
+  answered_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 17. COUPONS
+CREATE TABLE IF NOT EXISTS public.coupons (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  discount_type TEXT NOT NULL CHECK (discount_type IN ('flat', 'percentage')),
+  discount_value DECIMAL(10,2) NOT NULL,
+  min_order_amount DECIMAL(10,2) DEFAULT 0,
+  max_discount_amount DECIMAL(10,2),
+  is_active BOOLEAN DEFAULT TRUE,
+  expires_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+-- =====================================================================
+-- SECTION 2: FUNCTIONS & RPCs
+-- =====================================================================
+
+-- 2a. is_admin() — Helper for RLS policies
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
@@ -165,122 +234,228 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
 
--- Security: is_super_admin
+-- 2b. is_super_admin() — Check if current user is the protected super admin
 CREATE OR REPLACE FUNCTION public.is_super_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
-  RETURN EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid() AND role = 'super_admin' AND is_protected = TRUE);
+  RETURN EXISTS (
+    SELECT 1 FROM public.admin_users
+    WHERE id = auth.uid() AND role = 'super_admin' AND is_protected = TRUE
+  );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
 
--- Logic: decrement_stock (Checkout)
-CREATE OR REPLACE FUNCTION public.decrement_stock(p_variant_id UUID, p_quantity INTEGER)
-RETURNS VOID AS $$
-BEGIN
-    UPDATE public.product_variants SET stock_quantity = GREATEST(stock_quantity - p_quantity, 0) WHERE id = p_variant_id;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-GRANT EXECUTE ON FUNCTION public.decrement_stock(UUID, INTEGER) TO authenticated, service_role;
-
--- Logic: get_dashboard_stats (Admin API)
-CREATE OR REPLACE FUNCTION public.get_dashboard_stats()
-RETURNS JSON AS $$
-  SELECT json_build_object(
-    'total_revenue', COALESCE((SELECT SUM(total_amount) FROM public.orders WHERE status NOT IN ('Cancelled', 'Returned', 'Awaiting Payment')), 0),
-    'total_orders', (SELECT COUNT(*) FROM public.orders),
-    'pending_orders', (SELECT COUNT(*) FROM public.orders WHERE status = 'Pending'),
-    'total_products', (SELECT COUNT(*) FROM public.products)
-  );
-$$ LANGUAGE sql STABLE SECURITY DEFINER;
-GRANT EXECUTE ON FUNCTION public.get_dashboard_stats() TO authenticated, service_role;
-
--- Logic: handle_new_user (Auth Trigger)
+-- 2c. handle_new_user() — Auto-create profile on customer signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
+  -- Only create a profile if the user is NOT an admin
   IF NOT EXISTS (SELECT 1 FROM public.admin_users WHERE id = NEW.id) THEN
     INSERT INTO public.profiles (id, email, full_name)
-    VALUES (NEW.id, NEW.email, COALESCE(NEW.raw_user_meta_data->>'full_name', ''));
+    VALUES (
+      NEW.id,
+      NEW.email,
+      COALESCE(NEW.raw_user_meta_data->>'full_name', '')
+    );
   END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- 2d. handle_updated_at() — Auto-update timestamps
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- =============================================
+-- 2e. protect_super_admin() — Prevent deletion/modification of protected super admin
+CREATE OR REPLACE FUNCTION public.protect_super_admin()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF OLD.is_protected = TRUE THEN
+    RAISE EXCEPTION 'Cannot modify or delete the protected super admin account.';
+  END IF;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 2f. decrement_stock() — Safely reduce stock for a variant
+CREATE OR REPLACE FUNCTION public.decrement_stock(p_variant_id UUID, p_quantity INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE public.product_variants
+    SET stock_quantity = GREATEST(stock_quantity - p_quantity, 0)
+    WHERE id = p_variant_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 2g. get_dashboard_stats() — Performance-optimized admin stats
+CREATE OR REPLACE FUNCTION public.get_dashboard_stats()
+RETURNS JSON AS $$
+  SELECT json_build_object(
+    'total_revenue', COALESCE((
+      SELECT SUM(total_amount) 
+      FROM public.orders 
+      WHERE status NOT IN ('Cancelled', 'Returned', 'Awaiting Payment')
+    ), 0),
+    'total_orders', (SELECT COUNT(*) FROM public.orders),
+    'pending_orders', (SELECT COUNT(*) FROM public.orders WHERE status = 'Pending'),
+    'total_products', (SELECT COUNT(*) FROM public.products)
+  );
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
+
+
+-- =====================================================================
 -- SECTION 3: TRIGGERS
--- =============================================
+-- =====================================================================
+
+-- Profile management
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
-CREATE OR REPLACE FUNCTION public.handle_updated_at() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = NOW(); RETURN NEW; END; $$ LANGUAGE plpgsql;
+-- Timestamp tracking
 DROP TRIGGER IF EXISTS on_address_updated ON public.user_addresses;
-CREATE TRIGGER on_address_updated BEFORE UPDATE ON public.user_addresses FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER on_address_updated
+  BEFORE UPDATE ON public.user_addresses
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS on_product_updated ON public.products;
+CREATE TRIGGER on_product_updated
+  BEFORE UPDATE ON public.products
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+-- Super Admin protection
+DROP TRIGGER IF EXISTS protect_super_admin_delete ON public.admin_users;
+CREATE TRIGGER protect_super_admin_delete
+  BEFORE DELETE ON public.admin_users
+  FOR EACH ROW EXECUTE FUNCTION public.protect_super_admin();
+
+DROP TRIGGER IF EXISTS protect_super_admin_update ON public.admin_users;
+CREATE TRIGGER protect_super_admin_update
+  BEFORE UPDATE ON public.admin_users
+  FOR EACH ROW
+  WHEN (OLD.is_protected = TRUE)
+  EXECUTE FUNCTION public.protect_super_admin();
 
 
--- =============================================
--- SECTION 4: PERFORMANCE INDEXES
--- =============================================
-CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
-CREATE INDEX IF NOT EXISTS idx_orders_created_at ON public.orders(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_orders_razorpay_order_id ON public.orders(razorpay_order_id);
-CREATE INDEX IF NOT EXISTS idx_product_variants_parent ON public.product_variants(parent_product_id);
-CREATE INDEX IF NOT EXISTS idx_product_images_product ON public.product_images(product_id);
+-- =====================================================================
+-- SECTION 4: INDEXES (Performance & Uniqueness)
+-- =====================================================================
+
+-- Primary Search & filter indexes
+CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
+CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
+CREATE INDEX IF NOT EXISTS idx_products_is_active ON products(is_active);
+CREATE INDEX IF NOT EXISTS idx_user_addresses_user ON user_addresses(user_id);
+CREATE INDEX IF NOT EXISTS idx_otp_email ON email_verification_otps(email);
+CREATE INDEX IF NOT EXISTS idx_otp_phone ON phone_verification_otps(phone);
+CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_wishlists_user ON wishlists(user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_product ON product_reviews(product_id);
+CREATE INDEX IF NOT EXISTS idx_contact_status ON contact_messages(status);
+CREATE INDEX IF NOT EXISTS idx_faq_status ON faq_questions(status);
+
+-- Razorpay & Scaling indexes
+CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_orders_payment_id ON orders(payment_id);
+CREATE INDEX IF NOT EXISTS idx_orders_razorpay_order_id ON orders(razorpay_order_id);
+CREATE INDEX IF NOT EXISTS idx_orders_status_created ON orders(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_order_items_product ON order_items(product_id);
+CREATE INDEX IF NOT EXISTS idx_product_images_product ON product_images(product_id);
+CREATE INDEX IF NOT EXISTS idx_product_variants_parent ON product_variants(parent_product_id);
+CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
+CREATE INDEX IF NOT EXISTS idx_coupons_code ON coupons(code);
 
 
--- =============================================
--- SECTION 5: RETROACTIVE PATCHING (Existing DBs)
--- =============================================
--- This section ensures your existing tables get the new columns and constraints.
+-- =====================================================================
+-- SECTION 5: ROW LEVEL SECURITY (RLS)
+-- =====================================================================
 
+-- Enable RLS on ALL tables
 DO $$ 
-BEGIN 
-    -- 1. Patch Orders table status constraint
-    ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_status_check;
-    ALTER TABLE public.orders ADD CONSTRAINT orders_status_check CHECK (status IN ('Awaiting Payment', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned'));
-    
-    -- 2. Add missing Razorpay and Finance columns to orders
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='orders' AND column_name='razorpay_order_id') THEN
-        ALTER TABLE public.orders ADD COLUMN razorpay_order_id TEXT;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='orders' AND column_name='razorpay_payment_id') THEN
-        ALTER TABLE public.orders ADD COLUMN razorpay_payment_id TEXT;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='orders' AND column_name='shipping_fee') THEN
-        ALTER TABLE public.orders ADD COLUMN shipping_fee DECIMAL(10,2) DEFAULT 0;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='orders' AND column_name='discount_amount') THEN
-        ALTER TABLE public.orders ADD COLUMN discount_amount DECIMAL(10,2) DEFAULT 0;
-    END IF;
-
-    -- 3. Patch Profiles Table for unique phone
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'unique_phone') THEN
-        ALTER TABLE public.profiles ADD CONSTRAINT unique_phone UNIQUE (phone);
-    END IF;
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+        EXECUTE 'ALTER TABLE public.' || quote_ident(r.tablename) || ' ENABLE ROW LEVEL SECURITY;';
+    END LOOP;
 END $$;
 
+-- ── PROFILES ──
+CREATE POLICY "Users view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Admins manage profiles" ON profiles FOR ALL USING (public.is_admin());
 
--- =============================================
--- SECTION 6: SECURITY (RLS)
--- =============================================
-DO $$ DECLARE r RECORD; BEGIN FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP EXECUTE 'ALTER TABLE public.' || quote_ident(r.tablename) || ' ENABLE ROW LEVEL SECURITY;'; END LOOP; END $$;
+-- ── CATEGORIES ──
+CREATE POLICY "Public read categories" ON categories FOR SELECT USING (true);
+CREATE POLICY "Admins manage categories" ON categories FOR ALL USING (public.is_admin());
 
--- Policies (Condensed)
-DROP POLICY IF EXISTS "Own Data" ON public.orders; -- Example cleanup
-CREATE POLICY "Admins manage everything" ON public.products FOR ALL USING (public.is_admin());
-CREATE POLICY "Public read products" ON public.products FOR SELECT USING (is_active = TRUE);
-CREATE POLICY "Users browse own orders" ON public.orders FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Admins browse all orders" ON public.orders FOR SELECT USING (public.is_admin());
-CREATE POLICY "Admins update orders" ON public.orders FOR UPDATE USING (public.is_admin());
+-- ── PRODUCTS ──
+CREATE POLICY "Public read active products" ON products FOR SELECT USING (is_active = TRUE);
+CREATE POLICY "Admins manage products" ON products FOR ALL USING (public.is_admin());
 
--- Storage
+-- ── PRODUCT VARIANTS & IMAGES ──
+CREATE POLICY "Public read variants" ON product_variants FOR SELECT USING (true);
+CREATE POLICY "Admins manage variants" ON product_variants FOR ALL USING (public.is_admin());
+CREATE POLICY "Public read images" ON product_images FOR SELECT USING (true);
+CREATE POLICY "Admins manage images" ON product_images FOR ALL USING (public.is_admin());
+
+-- ── ORDERS & ITEMS ──
+CREATE POLICY "Users view own orders" ON orders FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users create orders" ON orders FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Admins manage orders" ON orders FOR ALL USING (public.is_admin());
+
+CREATE POLICY "Users view own order items" ON order_items FOR SELECT 
+USING (EXISTS (SELECT 1 FROM public.orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid()));
+CREATE POLICY "Admins manage order items" ON order_items FOR ALL USING (public.is_admin());
+
+-- ── USER ADDRESSES ──
+CREATE POLICY "Users manage own addresses" ON user_addresses FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Admins read addresses" ON user_addresses FOR SELECT USING (public.is_admin());
+
+-- ── REVIEWS & WISHLIST ──
+CREATE POLICY "Public read approved reviews" ON product_reviews FOR SELECT USING (is_approved = true);
+CREATE POLICY "Users manage own reviews" ON product_reviews FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Admins manage reviews" ON product_reviews FOR ALL USING (public.is_admin());
+
+CREATE POLICY "Users manage own wishlist" ON wishlists FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Admins view wishlists" ON wishlists FOR SELECT USING (public.is_admin());
+
+
+-- =====================================================================
+-- SECTION 6: SEED DATA (Basics)
+-- =====================================================================
+
+INSERT INTO public.categories (name, slug, description) VALUES
+  ('Cushion', 'cushion', 'Decorative cushions and pillows'),
+  ('Frame', 'frame', 'Photo frames and wall art')
+ON CONFLICT (name) DO NOTHING;
+
+INSERT INTO public.site_config (key, value, description) VALUES
+  ('global_shipping_fee', '50', 'Global shipping fee in INR'),
+  ('cod_enabled', 'true', 'Enable Cash on Delivery'),
+  ('razorpay_enabled', 'true', 'Enable Razorpay Online Payment')
+ON CONFLICT (key) DO NOTHING;
+
+
+-- =====================================================================
+-- SECTION 7: STORAGE
+-- =====================================================================
+
 INSERT INTO storage.buckets (id, name, public) VALUES ('product-images', 'product-images', true) ON CONFLICT (id) DO NOTHING;
-DROP POLICY IF EXISTS "Public access" ON storage.objects;
-CREATE POLICY "Public access" ON storage.objects FOR SELECT USING (bucket_id = 'product-images');
+CREATE POLICY "Public read" ON storage.objects FOR SELECT USING (bucket_id = 'product-images');
+CREATE POLICY "Admin manage" ON storage.objects FOR ALL USING (bucket_id = 'product-images' AND public.is_admin());
 
 
--- =============================================
--- FINAL VERIFICATION
--- =============================================
+-- =====================================================================
+-- FINAL ACTIONS
+-- =====================================================================
 NOTIFY pgrst, 'reload schema';
-SELECT '✅ AdvayDecor MASTER SCHEMA applied and fully aligned with project code!' AS status;
+SELECT '✅ AdvayDecor MASTER SCHEMA applied successfully!' AS status;
