@@ -143,7 +143,10 @@ export default function ProductDetailPage() {
     }
 
     const handleAddToCart = () => {
-        if (product.has_variants && !selectedVariant) {
+        // Only require variant selection if the product actually has variants to choose from
+        const hasAvailableVariants = product.has_variants && product.variants && product.variants.length > 0;
+
+        if (hasAvailableVariants && !selectedVariant) {
             toast.error('Please select a variant');
             return;
         }
