@@ -230,7 +230,7 @@ export default function ShopPage() {
                                 <span style={{ fontSize: '0.8rem', color: '#9e9eb8' }}>
                                     {sortedProducts.length} products
                                 </span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: '#fff', padding: '0.25rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0' }}>
+                                <div className="hidden md:flex items-center gap-1 bg-white p-1 rounded-xl border border-[#e2e8f0]">
                                     <button
                                         onClick={() => setGridCols(2)}
                                         style={{
@@ -247,7 +247,6 @@ export default function ShopPage() {
                                     </button>
                                     <button
                                         onClick={() => setGridCols(3)}
-                                        className="hidden md:block" // 3 cols only on medium upwards
                                         style={{
                                             padding: '0.4rem',
                                             borderRadius: '0.5rem',
