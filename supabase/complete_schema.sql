@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS public.product_variants (
   sku TEXT,
   price DECIMAL(10,2) NOT NULL,
   stock_quantity INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

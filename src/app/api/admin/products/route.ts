@@ -69,6 +69,7 @@ export async function POST(request: Request) {
                 sku: v.sku,
                 price: v.price,
                 stock_quantity: v.stock_quantity || 0,
+                is_active: v.is_active !== undefined ? v.is_active : true,
             }));
             await admin.from('product_variants').insert(variantRows);
         }
@@ -125,6 +126,7 @@ export async function PUT(request: Request) {
                     sku: v.sku,
                     price: v.price,
                     stock_quantity: v.stock_quantity || 0,
+                    is_active: v.is_active !== undefined ? v.is_active : true,
                 }));
                 await admin.from('product_variants').insert(variantRows);
             }

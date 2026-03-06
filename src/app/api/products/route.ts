@@ -31,7 +31,7 @@ export async function GET() {
 
             return {
                 ...p,
-                variants: p.product_variants || [],
+                variants: (p.product_variants || []).filter((v: any) => v.is_active),
                 images: p.product_images || [],
                 avg_rating: avgRating,
                 review_count: approvedReviews.length

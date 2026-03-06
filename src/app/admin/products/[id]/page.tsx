@@ -37,7 +37,7 @@ export default function AdminProductEditPage() {
         category: '', has_variants: false, is_active: true,
     });
 
-    const [variants, setVariants] = useState<{ id: string; variant_name: string; sku: string; price: string; stock_quantity: string }[]>([]);
+    const [variants, setVariants] = useState<{ id: string; variant_name: string; sku: string; price: string; stock_quantity: string; is_active: boolean }[]>([]);
     const [existingImages, setExistingImages] = useState<{ id: string; image_url: string }[]>([]);
     const [isUploading, setIsUploading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
@@ -85,6 +85,7 @@ export default function AdminProductEditPage() {
                             sku: v.sku || '',
                             price: v.price.toString(),
                             stock_quantity: v.stock_quantity.toString(),
+                            is_active: v.is_active,
                         }))
                     );
                     setExistingImages(
@@ -119,6 +120,7 @@ export default function AdminProductEditPage() {
                         sku: v.sku,
                         price: parseFloat(v.price) || 0,
                         stock_quantity: parseInt(v.stock_quantity) || 0,
+                        is_active: v.is_active,
                     }))
                     : [],
                 images: existingImages.map((img) => ({ image_url: img.image_url })),
@@ -163,7 +165,7 @@ export default function AdminProductEditPage() {
     const addVariant = () => {
         setVariants([...variants, {
             id: `v-new-${Date.now()}`, variant_name: '', sku: '',
-            price: form.base_price, stock_quantity: '0',
+            price: form.base_price, stock_quantity: '0', is_active: true,
         }]);
     };
 
@@ -502,7 +504,25 @@ export default function AdminProductEditPage() {
                                             <input value={variant.variant_name} onChange={(e) => { const u = [...variants]; u[idx].variant_name = e.target.value; setVariants(u); }} placeholder="Name" style={{ ...inputStyle, background: '#fff' }} />
                                             <input value={variant.sku} onChange={(e) => { const u = [...variants]; u[idx].sku = e.target.value; setVariants(u); }} placeholder="SKU" style={{ ...inputStyle, background: '#fff', fontFamily: 'monospace' }} />
                                             <input type="number" value={variant.price} onChange={(e) => { const u = [...variants]; u[idx].price = e.target.value; setVariants(u); }} placeholder="Price" style={{ ...inputStyle, background: '#fff' }} />
-                                            <input type="number" value={variant.stock_quantity} onChange={(e) => { const u = [...variants]; u[idx].stock_quantity = e.target.value; setVariants(u); }} placeholder="Stock" style={{ ...inputStyle, background: '#fff' }} />
+                                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                <input type="number" value={variant.stock_quantity} onChange={(e) => { const u = [...variants]; u[idx].stock_quantity = e.target.value; setVariants(u); }} placeholder="Stock" style={{ ...inputStyle, background: '#fff', flex: 1 }} />
+                                                <div
+                                                    title={variant.is_active ? 'Disable Variant' : 'Enable Variant'}
+                                                    onClick={() => { const u = [...variants]; u[idx].is_active = !u[idx].is_active; setVariants(u); }}
+                                                    style={{
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                        width: '42px', height: '42px', borderRadius: '0.75rem',
+                                                        background: variant.is_active ? '#00b4d8' : '#e8e4dc',
+                                                        color: '#fff', cursor: 'pointer', transition: 'all 0.2s', flexShrink: 0
+                                                    }}
+                                                >
+                                                    <div style={{
+                                                        width: '18px', height: '18px', borderRadius: '50%', background: '#fff',
+                                                        boxShadow: '0 1px 2px rgba(0,0,0,0.1)', transform: variant.is_active ? 'translateX(10px)' : 'translateX(-10px)',
+                                                        transition: 'transform 0.2s'
+                                                    }} />
+                                                </div>
+                                            </div>
                                         </div>
                                     </motion.div>
                                 ))}

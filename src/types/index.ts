@@ -32,6 +32,7 @@ export interface ProductVariant {
   sku: string | null;
   price: number;
   stock_quantity: number;
+  is_active: boolean;
   created_at: string;
   images?: ProductImage[];
 }
