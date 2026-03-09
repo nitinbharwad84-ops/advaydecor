@@ -6,50 +6,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
     ArrowLeft, Package, MapPin, CreditCard, Clock, User, Mail, Phone,
-    Hash, Truck, CheckCircle, AlertCircle, RotateCcw, Loader2, ShoppingBag, Tag
+    Hash, Truck, CheckCircle, AlertCircle, RotateCcw, Loader2, ShoppingBag, Tag, X, HelpCircle
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { useUserAuthStore } from '@/lib/auth-store';
-
-interface OrderItem {
-    id: string;
-    product_id: string;
-    variant_id: string | null;
-    product_title: string;
-    variant_name: string | null;
-    quantity: number;
-    unit_price: number;
-    total_price: number;
-}
-
-interface ShippingAddress {
-    full_name: string;
-    phone: string;
-    address_line1: string;
-    address_line2?: string;
-    city: string;
-    state: string;
-    pincode: string;
-    email?: string;
-}
-
-interface OrderDetail {
-    id: string;
-    user_id: string;
-    guest_info: { name: string; email: string; phone: string } | null;
-    status: string;
-    total_amount: number;
-    shipping_fee: number;
-    shipping_address: ShippingAddress;
-    payment_method: string;
-    payment_id: string | null;
-    coupon_code: string | null;
-    discount_amount: number;
-    razorpay_order_id?: string | null;
-    created_at: string;
-    items: OrderItem[];
-    profile: { full_name: string | null; email: string; phone: string | null } | null;
-}
+import toast from 'react-hot-toast';
+import { Order } from '@/types';
 
 const statusConfig: Record<string, { color: string; bg: string; icon: React.ReactNode }> = {
     'Awaiting Payment': { color: '#d97706', bg: '#fef3c7', icon: <Clock size={16} /> },
@@ -59,6 +21,8 @@ const statusConfig: Record<string, { color: string; bg: string; icon: React.Reac
     'Delivered': { color: '#166534', bg: '#dcfce7', icon: <CheckCircle size={16} /> },
     'Cancelled': { color: '#b91c1c', bg: '#fee2e2', icon: <AlertCircle size={16} /> },
     'Returned': { color: '#9f1239', bg: '#ffe4e6', icon: <RotateCcw size={16} /> },
+    'Cancellation Requested': { color: '#c2410c', bg: '#ffedd5', icon: <HelpCircle size={16} /> },
+    'Return Requested': { color: '#c2410c', bg: '#ffedd5', icon: <HelpCircle size={16} /> },
 };
 
 export default function OrderDetailPage() {
@@ -66,9 +30,10 @@ export default function OrderDetailPage() {
     const router = useRouter();
     const orderId = params.id as string;
     const { isAuthenticated } = useUserAuthStore();
-    const [order, setOrder] = useState<OrderDetail | null>(null);
+    const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [actionLoading, setActionLoading] = useState(false);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -89,6 +54,14 @@ export default function OrderDetailPage() {
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
     }, [orderId, isAuthenticated, router]);
+
+    const handleCancelOrder = () => {
+        router.push(`/orders/${orderId}/cancel`);
+    };
+
+    const handleReturnOrder = () => {
+        router.push(`/orders/${orderId}/return`);
+    };
 
     if (loading) {
         return (
@@ -120,10 +93,10 @@ export default function OrderDetailPage() {
     }
 
     const statusStyle = statusConfig[order.status] || statusConfig['Pending'];
-    const customerName = order.profile?.full_name || order.guest_info?.name || order.shipping_address.full_name || 'Customer';
-    const customerEmail = order.profile?.email || order.guest_info?.email || order.shipping_address.email || '—';
-    const customerPhone = order.profile?.phone || order.guest_info?.phone || order.shipping_address.phone || '—';
-    const subtotal = order.items.reduce((sum, item) => sum + item.total_price, 0);
+    const customerName = (order as any).profile?.full_name || order.guest_info?.name || order.shipping_address.full_name || 'Customer';
+    const customerEmail = (order as any).profile?.email || order.guest_info?.email || order.shipping_address.email || '—';
+    const customerPhone = (order as any).profile?.phone || order.guest_info?.phone || order.shipping_address.phone || '—';
+    const subtotal = order.items?.reduce((sum, item) => sum + item.total_price, 0) || 0;
 
     const sectionStyle: React.CSSProperties = {
         background: '#fff', borderRadius: '1.25rem', padding: 'clamp(1.25rem, 3vw, 2rem)',
@@ -193,7 +166,7 @@ export default function OrderDetailPage() {
                             </h2>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-                                {order.items.map((item, index) => (
+                                {order.items?.map((item, index) => (
                                     <div key={item.id} style={{
                                         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                                         padding: '1rem 0',
@@ -226,12 +199,12 @@ export default function OrderDetailPage() {
                                     <span style={{ color: '#64648b', fontSize: '0.9rem' }}>Subtotal</span>
                                     <span style={{ color: '#0a0a23', fontWeight: 600 }}>{formatCurrency(subtotal)}</span>
                                 </div>
-                                {(order.discount_amount > 0) && (
+                                {((order as any).discount_amount > 0) && (
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                         <span style={{ color: '#16a34a', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                            <Tag size={14} /> Discount {order.coupon_code && `(${order.coupon_code})`}
+                                            <Tag size={14} /> Discount {(order as any).coupon_code && `(${(order as any).coupon_code})`}
                                         </span>
-                                        <span style={{ color: '#16a34a', fontWeight: 600 }}>-{formatCurrency(order.discount_amount)}</span>
+                                        <span style={{ color: '#16a34a', fontWeight: 600 }}>-{formatCurrency((order as any).discount_amount)}</span>
                                     </div>
                                 )}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
@@ -323,11 +296,11 @@ export default function OrderDetailPage() {
                                         </p>
                                     </div>
                                 )}
-                                {order.razorpay_order_id && (
+                                {(order as any).razorpay_order_id && (
                                     <div>
                                         <p style={labelStyle}>Razorpay Order ID</p>
                                         <p style={{ ...valueStyle, fontFamily: 'monospace', fontSize: '0.85rem', wordBreak: 'break-all' }}>
-                                            {order.razorpay_order_id}
+                                            {(order as any).razorpay_order_id}
                                         </p>
                                     </div>
                                 )}
@@ -355,13 +328,41 @@ export default function OrderDetailPage() {
                             }}>
                                 <Package size={18} /> Continue Shopping
                             </Link>
-                            <Link href="/contact" style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                                padding: '0.875rem', border: '1px solid #e8e4dc', color: '#64648b',
-                                borderRadius: '0.75rem', fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem',
-                            }}>
-                                Need Help?
-                            </Link>
+
+                            {/* Cancellations and Returns */}
+                            {['Awaiting Payment', 'Pending', 'Processing'].includes(order.status) && (
+                                <button
+                                    onClick={handleCancelOrder}
+                                    disabled={actionLoading}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                                        padding: '0.875rem', border: '1px solid #ef4444', color: '#ef4444',
+                                        background: 'transparent', borderRadius: '0.75rem', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer',
+                                        opacity: actionLoading ? 0.7 : 1
+                                    }}
+                                >
+                                    {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <X size={18} />} Cancel Order
+                                </button>
+                            )}
+                            {order.status === 'Delivered' && (
+                                <button
+                                    onClick={handleReturnOrder}
+                                    disabled={actionLoading}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                                        padding: '0.875rem', border: '1px solid #d97706', color: '#d97706',
+                                        background: 'transparent', borderRadius: '0.75rem', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer',
+                                        opacity: actionLoading ? 0.7 : 1
+                                    }}
+                                >
+                                    {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <RotateCcw size={18} />} Return Order
+                                </button>
+                            )}
+                            {['Cancellation Requested', 'Return Requested'].includes(order.status) && (
+                                <div style={{ textAlign: 'center', padding: '1rem', background: '#f5f0e8', borderRadius: '0.75rem', fontSize: '0.85rem', color: '#64648b' }}>
+                                    Your {order.status === 'Return Requested' ? 'return' : 'cancellation'} request is currently under review.
+                                </div>
+                            )}
                         </motion.div>
                     </div>
                 </div>

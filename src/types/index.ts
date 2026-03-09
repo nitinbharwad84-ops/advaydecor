@@ -64,6 +64,10 @@ export interface Order {
   payment_id: string | null;
   created_at: string;
   items?: OrderItem[];
+  cancel_reason?: string | null;
+  return_reason?: string | null;
+  return_is_packaged?: boolean | null;
+  return_is_unused?: boolean | null;
 }
 
 export interface OrderItem {
@@ -95,7 +99,7 @@ export interface ShippingAddress {
   email?: string;
 }
 
-export type OrderStatus = 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Returned';
+export type OrderStatus = 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Returned' | 'Cancellation Requested' | 'Return Requested';
 
 export interface CartItem {
   product: Product;

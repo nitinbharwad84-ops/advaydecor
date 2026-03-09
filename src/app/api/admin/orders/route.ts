@@ -58,7 +58,7 @@ export async function PUT(request: Request) {
 
         if (!id || !status) return NextResponse.json({ error: 'Order ID and status required' }, { status: 400 });
 
-        const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned'];
+        const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Cancellation Requested', 'Return Requested'];
         if (!validStatuses.includes(status)) {
             return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
         }
