@@ -47,14 +47,25 @@ export default function AdminOrdersPage() {
     const [orders, setOrders] = useState<OrderData[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const [fetchError, setFetchError] = useState<string | null>(null);
+
     useEffect(() => {
         fetch('/api/admin/orders')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(d => { throw new Error(d.error || 'Failed to load orders'); });
+                }
+                return res.json();
+            })
             .then(data => {
                 if (Array.isArray(data)) setOrders(data);
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch((err) => {
+                console.error('Admin orders fetch error:', err);
+                setFetchError(err.message || 'Failed to load orders');
+                setLoading(false);
+            });
     }, []);
 
     const handleStatusChange = async (orderId: string, newStatus: string) => {
@@ -89,6 +100,17 @@ export default function AdminOrdersPage() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
                 <div style={{ width: '32px', height: '32px', border: '3px solid rgba(0,180,216,0.2)', borderTop: '3px solid #00b4d8', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
                 <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </div>
+        );
+    }
+
+    if (fetchError) {
+        return (
+            <div style={{ maxWidth: '600px', margin: '2rem auto', textAlign: 'center' }}>
+                <Eye size={40} style={{ margin: '0 auto 1rem', color: '#ef4444' }} />
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0a0a23', marginBottom: '0.5rem' }}>Failed to Load Orders</h2>
+                <p style={{ color: '#64648b', marginBottom: '1.5rem' }}>{fetchError}</p>
+                <button onClick={() => window.location.reload()} style={{ padding: '0.5rem 1.5rem', background: '#0a0a23', color: '#fff', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600 }}>Retry</button>
             </div>
         );
     }

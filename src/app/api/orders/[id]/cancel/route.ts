@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
+import { createAdminClient } from '@/lib/supabase-admin';
 
 export async function POST(
     request: Request,
@@ -17,7 +18,7 @@ export async function POST(
             );
         }
 
-        // Create authenticated Supabase client
+        // Create authenticated Supabase client to verify user identity
         const cookieStore = await cookies();
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,16 +47,23 @@ export async function POST(
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
         }
 
-        // Fetch the order — must belong to user
-        const { data: order, error: fetchError } = await supabase
+        // Use admin client (bypasses RLS) for reading and updating the order
+        const admin = createAdminClient();
+
+        // Fetch the order — verify it belongs to this user
+        const { data: order, error: fetchError } = await admin
             .from('orders')
-            .select('id, status')
+            .select('id, status, user_id')
             .eq('id', orderId)
-            .eq('user_id', user.id)
             .single();
 
         if (fetchError || !order) {
             console.error('Order fetch error:', fetchError);
+            return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+        }
+
+        // Verify ownership
+        if (order.user_id !== user.id) {
             return NextResponse.json({ error: 'Order not found' }, { status: 404 });
         }
 
@@ -68,15 +76,14 @@ export async function POST(
             );
         }
 
-        // Update order status and save reason
-        const { error: updateError } = await supabase
+        // Update order status and save reason using admin client
+        const { error: updateError } = await admin
             .from('orders')
             .update({
                 status: 'Cancellation Requested',
                 cancel_reason: reason.trim(),
             })
-            .eq('id', orderId)
-            .eq('user_id', user.id);
+            .eq('id', orderId);
 
         if (updateError) {
             console.error('Cancel update error:', updateError);

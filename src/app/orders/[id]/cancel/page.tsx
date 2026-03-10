@@ -42,7 +42,7 @@ export default function CancelOrderPage() {
                 if (data.error) throw new Error(data.error);
                 // Guard: If order can't be cancelled, redirect back
                 if (!['Awaiting Payment', 'Pending', 'Processing'].includes(data.status)) {
-                    toast.error('This order cannot be cancelled');
+                    toast.error('This order cannot be cancelled at its current status');
                     router.push(`/orders/${orderId}`);
                     return;
                 }
@@ -50,7 +50,6 @@ export default function CancelOrderPage() {
             })
             .catch(err => {
                 toast.error(err.message);
-                router.push('/profile');
             })
             .finally(() => setPageLoading(false));
     }, [orderId, isAuthenticated, router]);

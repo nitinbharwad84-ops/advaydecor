@@ -52,7 +52,6 @@ export default function ReturnOrderPage() {
             })
             .catch(err => {
                 toast.error(err.message);
-                router.push('/profile');
             })
             .finally(() => setPageLoading(false));
     }, [orderId, isAuthenticated, router]);

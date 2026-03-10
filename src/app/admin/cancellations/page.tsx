@@ -56,16 +56,24 @@ export default function AdminCancellationsPage() {
     const [orders, setOrders] = useState<OrderData[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     const fetchOrders = async () => {
         try {
+            setFetchError(null);
             const res = await fetch('/api/admin/orders');
             const data = await res.json();
+            if (!res.ok) {
+                console.error('Admin orders API error:', data);
+                setFetchError(data.error || 'Failed to load orders');
+                return;
+            }
             if (Array.isArray(data)) {
                 setOrders(data.filter((o: OrderData) => o.status === 'Cancellation Requested' || o.status === 'Cancelled'));
             }
-        } catch {
-            toast.error('Failed to load cancellation requests');
+        } catch (err) {
+            console.error('Fetch error:', err);
+            setFetchError('Network error — could not reach the server');
         } finally {
             setLoading(false);
         }
@@ -103,6 +111,17 @@ export default function AdminCancellationsPage() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
                 <div style={{ width: '32px', height: '32px', border: '3px solid rgba(0,180,216,0.2)', borderTop: '3px solid #00b4d8', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
                 <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </div>
+        );
+    }
+
+    if (fetchError) {
+        return (
+            <div style={{ maxWidth: '600px', margin: '2rem auto', textAlign: 'center' }}>
+                <XCircle size={40} style={{ margin: '0 auto 1rem', color: '#ef4444' }} />
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0a0a23', marginBottom: '0.5rem' }}>Failed to Load</h2>
+                <p style={{ color: '#64648b', marginBottom: '1.5rem' }}>{fetchError}</p>
+                <button onClick={() => { setLoading(true); fetchOrders(); }} style={{ padding: '0.5rem 1.5rem', background: '#0a0a23', color: '#fff', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600 }}>Retry</button>
             </div>
         );
     }
