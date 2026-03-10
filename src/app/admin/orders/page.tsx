@@ -213,53 +213,141 @@ export default function AdminOrdersPage() {
                                     </tr>
                                     {expandedOrder === order.id && (
                                         <tr>
-                                            <td colSpan={8} style={{ padding: '1.25rem 1.5rem', background: 'rgba(245,240,232,0.3)' }}>
-                                                <div className="admin-order-detail-grid">
-                                                    {/* Order Items */}
-                                                    <div>
-                                                        <h4 style={{ fontSize: '0.7rem', fontWeight: 600, color: '#9e9eb8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Order Items</h4>
-                                                        {order.items?.map(item => (
-                                                            <div key={item.id} style={{ fontSize: '0.875rem', color: '#0a0a23', marginBottom: '0.25rem' }}>
-                                                                {item.product_title}{item.variant_name ? ` (${item.variant_name})` : ''} × {item.quantity} — ₹{Number(item.total_price).toLocaleString('en-IN')}
+                                            <td colSpan={8} style={{ padding: '0', background: 'rgba(245,240,232,0.25)' }}>
+                                                <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+                                                    {/* Top Row: Order Meta + Customer Info */}
+                                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+
+                                                        {/* Order Info */}
+                                                        <div style={{ background: '#fff', padding: '1.25rem', borderRadius: '0.75rem', border: '1px solid #f0ece4' }}>
+                                                            <h4 style={{ fontSize: '0.72rem', fontWeight: 600, color: '#00b4d8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>Order Information</h4>
+                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Order ID</span>
+                                                                    <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 600, color: '#0a0a23' }}>{order.id.substring(0, 12)}…</span>
+                                                                </div>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Placed on</span>
+                                                                    <span style={{ fontSize: '0.78rem', color: '#0a0a23' }}>{new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                                                                </div>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Payment</span>
+                                                                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: order.payment_method === 'COD' ? '#d97706' : '#16a34a' }}>{order.payment_method === 'COD' ? 'Cash on Delivery' : 'Razorpay (Online)'}</span>
+                                                                </div>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Status</span>
+                                                                    <span style={{
+                                                                        display: 'inline-block', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontSize: '0.7rem', fontWeight: 600,
+                                                                        background: statusColors[order.status]?.bg || '#f3f4f6',
+                                                                        color: statusColors[order.status]?.text || '#6b7280',
+                                                                    }}>{order.status}</span>
+                                                                </div>
                                                             </div>
-                                                        ))}
-                                                        <p style={{ fontSize: '0.75rem', color: '#9e9eb8', marginTop: '0.5rem' }}>
-                                                            Shipping: ₹{Number(order.shipping_fee).toLocaleString('en-IN')}
-                                                        </p>
-                                                        {order.coupon_code && (
-                                                            <p style={{ fontSize: '0.75rem', color: '#16a34a', marginTop: '0.125rem' }}>
-                                                                Discount ({order.coupon_code}): -₹{Number(order.discount_amount).toLocaleString('en-IN')}
+                                                        </div>
+
+                                                        {/* Customer Info */}
+                                                        <div style={{ background: '#fff', padding: '1.25rem', borderRadius: '0.75rem', border: '1px solid #f0ece4' }}>
+                                                            <h4 style={{ fontSize: '0.72rem', fontWeight: 600, color: '#00b4d8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>Customer Details</h4>
+                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Name</span>
+                                                                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#0a0a23' }}>{order.customer_name}</span>
+                                                                </div>
+                                                                {order.customer_email && (
+                                                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                        <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Email</span>
+                                                                        <span style={{ fontSize: '0.78rem', color: '#0a0a23' }}>{order.customer_email}</span>
+                                                                    </div>
+                                                                )}
+                                                                {order.customer_phone && (
+                                                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                        <span style={{ fontSize: '0.78rem', color: '#64648b' }}>Phone</span>
+                                                                        <span style={{ fontSize: '0.78rem', color: '#0a0a23' }}>{order.customer_phone}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Shipping Address */}
+                                                        <div style={{ background: '#fff', padding: '1.25rem', borderRadius: '0.75rem', border: '1px solid #f0ece4' }}>
+                                                            <h4 style={{ fontSize: '0.72rem', fontWeight: 600, color: '#00b4d8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>Shipping Address</h4>
+                                                            <p style={{ fontSize: '0.85rem', color: '#0a0a23', lineHeight: 1.7, margin: 0 }}>
+                                                                <strong>{order.shipping_address.full_name}</strong><br />
+                                                                {order.shipping_address.address_line1}<br />
+                                                                {order.shipping_address.address_line2 && <>{order.shipping_address.address_line2}<br /></>}
+                                                                {order.shipping_address.city}, {order.shipping_address.state} — {order.shipping_address.pincode}<br />
+                                                                📞 {order.shipping_address.phone}
                                                             </p>
-                                                        )}
+                                                        </div>
                                                     </div>
 
-                                                    {/* Shipping Address */}
-                                                    <div>
-                                                        <h4 style={{ fontSize: '0.7rem', fontWeight: 600, color: '#9e9eb8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Shipping Address</h4>
-                                                        <p style={{ fontSize: '0.875rem', color: '#0a0a23' }}>{order.shipping_address.full_name}</p>
-                                                        <p style={{ fontSize: '0.875rem', color: '#0a0a23' }}>{order.shipping_address.address_line1}</p>
-                                                        <p style={{ fontSize: '0.875rem', color: '#0a0a23' }}>{order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.pincode}</p>
-                                                        <p style={{ fontSize: '0.875rem', color: '#0a0a23' }}>{order.shipping_address.phone}</p>
+                                                    {/* Order Items Table */}
+                                                    <div style={{ background: '#fff', padding: '1.25rem', borderRadius: '0.75rem', border: '1px solid #f0ece4' }}>
+                                                        <h4 style={{ fontSize: '0.72rem', fontWeight: 600, color: '#00b4d8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>Order Items ({order.items?.length || 0})</h4>
+                                                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                                            <thead>
+                                                                <tr style={{ borderBottom: '1px solid #f0ece4' }}>
+                                                                    {['Product', 'Variant', 'Unit Price', 'Qty', 'Total'].map(h => (
+                                                                        <th key={h} style={{ textAlign: 'left', padding: '0.5rem 0.75rem', fontSize: '0.7rem', fontWeight: 600, color: '#9e9eb8', textTransform: 'uppercase' }}>{h}</th>
+                                                                    ))}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {order.items?.map(item => (
+                                                                    <tr key={item.id} style={{ borderBottom: '1px solid #f8f5f0' }}>
+                                                                        <td style={{ padding: '0.6rem 0.75rem', fontSize: '0.85rem', fontWeight: 500, color: '#0a0a23' }}>{item.product_title}</td>
+                                                                        <td style={{ padding: '0.6rem 0.75rem', fontSize: '0.82rem', color: '#64648b' }}>{item.variant_name || '—'}</td>
+                                                                        <td style={{ padding: '0.6rem 0.75rem', fontSize: '0.82rem', color: '#64648b' }}>₹{Number(item.unit_price).toLocaleString('en-IN')}</td>
+                                                                        <td style={{ padding: '0.6rem 0.75rem', fontSize: '0.82rem', color: '#64648b' }}>{item.quantity}</td>
+                                                                        <td style={{ padding: '0.6rem 0.75rem', fontSize: '0.85rem', fontWeight: 600, color: '#0a0a23' }}>₹{Number(item.total_price).toLocaleString('en-IN')}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+
+                                                        {/* Price Summary */}
+                                                        <div style={{ marginTop: '1rem', paddingTop: '0.75rem', borderTop: '2px solid #f0ece4', display: 'flex', flexDirection: 'column', gap: '0.3rem', maxWidth: '300px', marginLeft: 'auto' }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                <span style={{ fontSize: '0.82rem', color: '#64648b' }}>Subtotal</span>
+                                                                <span style={{ fontSize: '0.82rem', color: '#0a0a23' }}>₹{(order.items?.reduce((sum, i) => sum + Number(i.total_price), 0) || 0).toLocaleString('en-IN')}</span>
+                                                            </div>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                <span style={{ fontSize: '0.82rem', color: '#64648b' }}>Shipping</span>
+                                                                <span style={{ fontSize: '0.82rem', color: '#0a0a23' }}>{Number(order.shipping_fee) > 0 ? `₹${Number(order.shipping_fee).toLocaleString('en-IN')}` : 'Free'}</span>
+                                                            </div>
+                                                            {order.coupon_code && (
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <span style={{ fontSize: '0.82rem', color: '#16a34a' }}>Discount ({order.coupon_code})</span>
+                                                                    <span style={{ fontSize: '0.82rem', color: '#16a34a' }}>−₹{Number(order.discount_amount).toLocaleString('en-IN')}</span>
+                                                                </div>
+                                                            )}
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid #f0ece4' }}>
+                                                                <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0a0a23' }}>Total</span>
+                                                                <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#00b4d8' }}>₹{Number(order.total_amount).toLocaleString('en-IN')}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     {/* Update Status */}
-                                                    <div>
-                                                        <h4 style={{ fontSize: '0.7rem', fontWeight: 600, color: '#9e9eb8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Update Status</h4>
+                                                    <div style={{ background: '#fff', padding: '1.25rem', borderRadius: '0.75rem', border: '1px solid #f0ece4', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                                                        <h4 style={{ fontSize: '0.72rem', fontWeight: 600, color: '#00b4d8', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>Update Status</h4>
                                                         <select
                                                             value={order.status}
                                                             onChange={(e) => handleStatusChange(order.id, e.target.value)}
                                                             style={{
-                                                                width: '100%', padding: '0.5rem 0.75rem',
-                                                                borderRadius: '0.5rem', border: '1px solid #d4d0c8',
-                                                                background: '#ffffff', fontSize: '0.875rem',
-                                                                outline: 'none', color: '#0a0a23',
+                                                                padding: '0.5rem 0.75rem', borderRadius: '0.5rem',
+                                                                border: '1px solid #d4d0c8', background: '#fff',
+                                                                fontSize: '0.85rem', outline: 'none', color: '#0a0a23',
+                                                                minWidth: '180px',
                                                             }}
                                                         >
-                                                            {statusOptions.filter(s => s !== 'All').map(s => (
+                                                            {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Cancellation Requested', 'Return Requested'].map(s => (
                                                                 <option key={s} value={s}>{s}</option>
                                                             ))}
                                                         </select>
                                                     </div>
+
                                                 </div>
                                             </td>
                                         </tr>
