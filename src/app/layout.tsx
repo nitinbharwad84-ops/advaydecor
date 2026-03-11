@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://advaydecor.vercel.app'),
   title: "AdvayDecor: Premium Home Decor & Cushion Covers Online India",
   description: "Elevate spaces with artisan cushions, linen covers & designer decor. Pan-India shipping directly from our Mumbai studio.",
+  applicationName: "AdvayDecor",
   keywords: [
     "home decor online India",
     "cushion covers online India",
@@ -40,7 +41,10 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   icons: {
-    icon: "/logo.svg",
+    icon: [
+      { url: "/logo.svg" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
     shortcut: "/logo.svg",
     apple: "/logo.svg",
   },
@@ -49,11 +53,32 @@ export const metadata: Metadata = {
     description: "Elevate spaces with artisan cushions, linen covers & designer decor. Pan-India shipping directly from our Mumbai studio.",
     type: "website",
     siteName: "AdvayDecor",
+    images: [
+      {
+        url: "/logo.svg",
+        width: 800,
+        height: 600,
+        alt: "AdvayDecor Logo",
+      },
+    ],
   },
   verification: {
     google: "GVNgZZ_0bSD0QJuRyvEBEbGuNuX1xgZ296vLruj4_JY",
   },
 };
+
+// Site Name JSON-LD for Google
+const SiteNameJsonLd = () => (
+  <Script id="sitename-jsonld" type="application/ld+json" strategy="afterInteractive">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Advay Decor",
+      "alternateName": ["AdvayDecor", "Advaya Decor"],
+      "url": "https://advaydecor.vercel.app"
+    })}
+  </Script>
+);
 
 // PWA Service Worker Registration
 const PwaRegistration = () => (
@@ -83,6 +108,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
+        <SiteNameJsonLd />
         {/* ======================= */}
         {/* Google Analytics 4 (GA4) */}
         {/* ======================= */}
