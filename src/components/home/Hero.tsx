@@ -117,7 +117,7 @@ export default function Hero() {
                             transition={{ delay: 0.7, duration: 0.6 }}
                             style={{ fontSize: '1.15rem', color: 'rgba(255,255,255,0.55)', maxWidth: '540px', marginBottom: '2.5rem', lineHeight: 1.7 }}
                         >
-                            Elevate your space with elegance & style. Discover our curated collection of premium, artisanal home decor crafted to inspire.
+                            Elevate your space with Advay Decor. Discover our curated collection of premium, artisanal home decor crafted to inspire.
                         </motion.p>
 
                         {/* CTAs */}
