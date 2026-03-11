@@ -12,6 +12,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
             title, 
             description, 
             base_price, 
+            category,
             images:product_images(image_url)
         `)
         .eq('slug', params.slug)
@@ -24,20 +25,32 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     }
 
     const firstImage = (product as any).images?.[0]?.image_url;
+    const productTitle = `${product.title} Cushion Cover - Buy Online India | AdvayDecor`;
+    const productDescription = product.description
+        ? `Shop the ${product.title}. ${product.description.slice(0, 120)}. Fast delivery across India.`
+        : `Shop the ${product.title}. Premium artisan home decor. Fast delivery across India.`;
 
     return {
-        title: `${product.title} | AdvayDecor`,
-        description: product.description,
+        title: productTitle,
+        description: productDescription,
+        keywords: [
+            product.title,
+            'cushion covers',
+            'home decor India',
+            'buy cushions online India',
+            product.category || 'home decor',
+            'AdvayDecor',
+        ],
         openGraph: {
             title: product.title,
-            description: product.description,
+            description: productDescription,
             images: firstImage ? [{ url: firstImage }] : [],
             type: 'website',
         },
         twitter: {
             card: 'summary_large_image',
             title: product.title,
-            description: product.description,
+            description: productDescription,
             images: firstImage ? [firstImage] : [],
         },
     };
@@ -64,7 +77,7 @@ export default async function ProductLayout(props: { children: React.ReactNode, 
 
     const productImages = (product as any).images?.map((img: any) => img.image_url) || [];
 
-    // 3. JSON-LD Structured Data for Google Rich Snippets
+    // 3. JSON-LD Structured Data for Google Rich Snippets (with keywords)
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Product',
@@ -73,6 +86,7 @@ export default async function ProductLayout(props: { children: React.ReactNode, 
         description: product.description,
         sku: params.slug,
         category: product.category,
+        keywords: ['cushion covers', 'home decor India', 'embroidered cushions', 'premium cushion covers', 'buy online India'],
         offers: {
             '@type': 'Offer',
             url: `https://advaydecor.vercel.app/product/${params.slug}`,

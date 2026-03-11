@@ -53,7 +53,7 @@ export default function FeaturedCollection() {
                             className="group hidden sm:inline-flex items-center font-medium"
                             style={{ gap: '0.5rem', fontSize: '0.875rem', color: '#00b4d8' }}
                         >
-                            View All
+                            Buy designer sofa cushions
                             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </motion.div>
@@ -133,7 +133,7 @@ export default function FeaturedCollection() {
                         className="inline-flex items-center font-medium"
                         style={{ gap: '0.5rem', fontSize: '0.875rem', color: '#00b4d8' }}
                     >
-                        View All Products
+                        Shop designer cushion covers
                         <ArrowRight size={16} />
                     </Link>
                 </div>

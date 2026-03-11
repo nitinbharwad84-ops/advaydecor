@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 
-// 2. Automated XML Sitemap
+// Automated XML Sitemap with keyword-rich category URLs
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = await createServerSupabaseClient();
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://advaydecor.vercel.app';
@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
     }));
 
-    // Add static/core pages
+    // Static/core pages
     const staticUrls: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
@@ -47,5 +47,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
     ];
 
-    return [...staticUrls, ...productUrls];
+    // Keyword-rich category URLs for search engines
+    const categoryUrls: MetadataRoute.Sitemap = [
+        {
+            url: `${baseUrl}/cushions/embroidered-covers`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/cushions/linen-covers`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.7,
+        },
+    ];
+
+    // Trend pages
+    const trendUrls: MetadataRoute.Sitemap = [
+        {
+            url: `${baseUrl}/trends`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.6,
+        },
+        {
+            url: `${baseUrl}/trends/2026-boucle-cushions`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        },
+    ];
+
+    return [...staticUrls, ...categoryUrls, ...trendUrls, ...productUrls];
 }

@@ -1,12 +1,21 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Shop Our Collection | AdvayDecor',
-    description: 'Browse our curated collection of premium home decor. Hand-stitched cushions, designer frames, and artisanal accents to elevate your living space.',
-    keywords: ['home decor shop', 'buy cushions online', 'designer home accessories', 'AdvayDecor collection'],
+    title: 'Buy Cushion Covers Online India - AdvayDecor Collection',
+    description: 'Curated linen, embroidered & bouclé cushions for sofas. Discover premium artistic decor to match your space and your vibe.',
+    keywords: [
+        'cushion covers online India',
+        'buy cushions online',
+        'designer cushion covers',
+        'embroidered cushion covers',
+        'linen pillow covers India',
+        'bouclé cushions 2026',
+        'sofa cushion sets Mumbai',
+        'AdvayDecor collection',
+    ],
     openGraph: {
-        title: 'Shop Our Collection | AdvayDecor',
-        description: 'Browse our curated collection of premium home decor.',
+        title: 'Buy Cushion Covers Online India - AdvayDecor Collection',
+        description: 'Curated linen, embroidered & bouclé cushions for sofas. Discover premium artistic decor.',
         type: 'website',
         url: '/shop',
     },

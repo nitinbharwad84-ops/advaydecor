@@ -12,9 +12,24 @@ import Script from 'next/script';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://advaydecor.vercel.app'),
-  title: "AdvayDecor — Elevate Your Space with Elegance & Style",
-  description: "Discover curated, artisanal home decor. Premium cushions, artistic accents, and stylish solutions to transform your living space. Pan-India delivery.",
-  keywords: ["home decor", "cushions", "interior design", "artisanal", "India", "AdvayDecor"],
+  title: "AdvayDecor: Premium Home Decor & Cushion Covers Online India",
+  description: "Elevate spaces with artisan cushions, linen covers & designer decor. Pan-India shipping directly from our Mumbai studio.",
+  keywords: [
+    "home decor online India",
+    "cushion covers online India",
+    "buy cushions online",
+    "premium cushion covers",
+    "artisan home accessories",
+    "designer cushion covers",
+    "embroidered cushion covers",
+    "linen pillow covers India",
+    "handmade home decor Mumbai",
+    "sofa cushion sets Mumbai",
+    "bouclé cushions 2026",
+    "artisan wall art cushions",
+    "interior design",
+    "AdvayDecor",
+  ],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -30,8 +45,8 @@ export const metadata: Metadata = {
     apple: "/logo.svg",
   },
   openGraph: {
-    title: "AdvayDecor — Elevate Your Space with Elegance & Style",
-    description: "Discover curated, artisanal home decor. Premium cushions, artistic accents, and stylish solutions.",
+    title: "AdvayDecor: Premium Home Decor & Cushion Covers Online India",
+    description: "Elevate spaces with artisan cushions, linen covers & designer decor. Pan-India shipping directly from our Mumbai studio.",
     type: "website",
     siteName: "AdvayDecor",
   },

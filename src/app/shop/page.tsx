@@ -96,7 +96,7 @@ export default function ShopPage() {
                         className="font-[family-name:var(--font-display)]"
                         style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', fontWeight: 700, color: '#fff', marginTop: '0.75rem', marginBottom: '1rem' }}
                     >
-                        Shop
+                        Cushion Covers Online
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -104,7 +104,7 @@ export default function ShopPage() {
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}
                     >
-                        Discover our curated collection of premium home decor, crafted to bring warmth and style to your space.
+                        Curated linen, embroidered & bouclé cushions for sofas. Discover premium artistic decor to match your space.
                     </motion.p>
                 </div>
             </section>

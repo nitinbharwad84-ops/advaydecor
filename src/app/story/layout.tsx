@@ -1,11 +1,17 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Our Story — Artisanal Craftsmanship | AdvayDecor',
-    description: 'Hand-sewn, locally sourced, and thoughtfully designed. Meet the artisans who create our premium home collections.',
+    title: 'Our Story & Studio | Handmade Home Decor Mumbai',
+    description: 'AdvayDecor is a premium home decor brand based in Dahisar East, Mumbai. Contact us for bespoke artisan cushions and accessories.',
+    keywords: [
+        'handmade home decor Mumbai',
+        'artisan cushions Dahisar',
+        'home decor brand Mumbai',
+        'AdvayDecor story',
+    ],
     openGraph: {
-        title: 'Meet the Makers | Our Story',
-        description: 'The artisanal craftsmanship behind AdvayDecor.',
+        title: 'Our Story & Studio | Handmade Home Decor Mumbai',
+        description: 'AdvayDecor is a premium home decor brand based in Dahisar East, Mumbai.',
         type: 'website',
     },
 };
