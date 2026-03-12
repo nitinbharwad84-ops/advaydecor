@@ -41,6 +41,9 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
             product.category || 'home decor',
             'AdvayDecor',
         ],
+        alternates: {
+            canonical: `/product/${params.slug}`,
+        },
         openGraph: {
             title: product.title,
             description: productDescription,
@@ -89,7 +92,7 @@ export default async function ProductLayout(props: { children: React.ReactNode, 
         keywords: ['cushion covers', 'home decor India', 'embroidered cushions', 'premium cushion covers', 'buy online India'],
         offers: {
             '@type': 'Offer',
-            url: `https://advaydecor.in/product/${params.slug}`,
+            url: `https://www.advaydecor.in/product/${params.slug}`,
             priceCurrency: 'INR',
             price: product.base_price,
             itemCondition: 'https://schema.org/NewCondition',

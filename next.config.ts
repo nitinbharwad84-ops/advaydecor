@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  trailingSlash: false,
   images: {
     dangerouslyAllowSVG: true,
     formats: ['image/avif', 'image/webp'],

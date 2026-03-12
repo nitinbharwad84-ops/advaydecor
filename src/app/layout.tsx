@@ -66,9 +66,6 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "Advay Decor",
   },
-  alternates: {
-    canonical: 'https://www.advaydecor.in',
-  },
   icons: {
     icon: [
       { url: "/logo.svg" },
