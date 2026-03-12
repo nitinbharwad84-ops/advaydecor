@@ -65,7 +65,7 @@ export async function POST(request: Request) {
                         </div>
 
                         <div style="text-align: center; margin: 30px 0;">
-                            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://advaydecor.in'}/shop" 
+                            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://www.advaydecor.in'}/shop" 
                                style="background: #00b4d8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600;">
                                Start Shopping
                             </a>

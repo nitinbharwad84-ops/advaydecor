@@ -47,8 +47,8 @@ export async function middleware(request: NextRequest) {
     // ==============================
     // 0. Domain Redirection (SEO)
     // ==============================
-    // Enforce primary domain to prevent indexing of Vercel URLs
-    if (host === 'advaydecor.vercel.app' && process.env.NODE_ENV === 'production') {
+    // Enforce primary domain to prevent indexing of Vercel or Apex URLs
+    if ((host === 'advaydecor.vercel.app' || host === 'advaydecor.in') && process.env.NODE_ENV === 'production') {
         return NextResponse.redirect(
             `https://www.advaydecor.in${pathname}${searchParams}`,
             301
