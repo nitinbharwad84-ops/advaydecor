@@ -220,7 +220,7 @@ export default function Navbar() {
                                 }} />
                             </Link>
                         ) : (
-                            <Link
+                                <Link
                                 href="/login"
                                 style={{
                                     display: 'flex',
@@ -233,6 +233,8 @@ export default function Navbar() {
                                     color: showSolid ? 'rgba(10,10,35,0.5)' : 'rgba(255,255,255,0.6)',
                                     textDecoration: 'none',
                                 }}
+                                aria-label="Sign in"
+                                title="Sign in"
                             >
                                 <User size={18} strokeWidth={1.8} />
                             </Link>
@@ -299,9 +301,13 @@ export default function Navbar() {
                                 color: showSolid ? '#0a0a23' : '#ffffff',
                                 marginLeft: '0.25rem',
                             }}
-                            aria-label="Toggle menu"
+                            aria-label={isMobileOpen ? "Close menu" : "Open menu"}
                         >
-                            {isMobileOpen ? <X size={22} /> : <Menu size={22} />}
+                            {isMobileOpen ? (
+                                <X size={24} strokeWidth={1.5} />
+                            ) : (
+                                <Menu size={24} strokeWidth={1.5} />
+                            )}
                         </button>
                     </div>
                 </div>

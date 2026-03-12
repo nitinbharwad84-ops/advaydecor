@@ -145,6 +145,7 @@ export default function CartPage() {
                                                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                                 background: 'transparent', border: 'none', cursor: 'pointer',
                                                             }}
+                                                            aria-label="Decrease quantity"
                                                         >
                                                             <Minus size={14} />
                                                         </button>
@@ -158,6 +159,7 @@ export default function CartPage() {
                                                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                                 background: 'transparent', border: 'none', cursor: 'pointer',
                                                             }}
+                                                            aria-label="Increase quantity"
                                                         >
                                                             <Plus size={14} />
                                                         </button>

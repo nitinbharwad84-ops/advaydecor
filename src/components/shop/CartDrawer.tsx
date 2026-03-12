@@ -162,26 +162,28 @@ export default function CartDrawer() {
                                                                 display: 'flex', alignItems: 'center', gap: '0.125rem',
                                                                 background: '#f5f0e8', borderRadius: '9999px', padding: '0.125rem',
                                                             }}>
-                                                                <button
+                                                                 <button
                                                                     onClick={() => updateQuantity(item.product.id, item.variant?.id || null, item.quantity - 1)}
                                                                     style={{
                                                                         width: '24px', height: '24px', borderRadius: '50%',
                                                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                                         background: 'transparent', border: 'none', cursor: 'pointer',
                                                                     }}
+                                                                    aria-label="Decrease quantity"
                                                                 >
                                                                     <Minus size={10} />
                                                                 </button>
                                                                 <span style={{ width: '1.5rem', textAlign: 'center', fontSize: '0.75rem', fontWeight: 600 }}>
                                                                     {item.quantity}
                                                                 </span>
-                                                                <button
+                                                                 <button
                                                                     onClick={() => updateQuantity(item.product.id, item.variant?.id || null, item.quantity + 1)}
                                                                     style={{
                                                                         width: '24px', height: '24px', borderRadius: '50%',
                                                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                                         background: 'transparent', border: 'none', cursor: 'pointer',
                                                                     }}
+                                                                    aria-label="Increase quantity"
                                                                 >
                                                                     <Plus size={10} />
                                                                 </button>
