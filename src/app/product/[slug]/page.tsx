@@ -469,6 +469,49 @@ export default function ProductDetailPage() {
                             </div>
                         ))}
                     </div>
+
+                    {/* Detailed Specifications Section */}
+                    <div style={{ marginTop: '4rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
+                            <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, transparent, #e8e4dc)' }} />
+                            <h2 className="font-[family-name:var(--font-display)]" style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0a0a23', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                                Product Specifications
+                            </h2>
+                            <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to left, transparent, #e8e4dc)' }} />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[
+                                { title: 'Dimensions', value: product.dimensions },
+                                { title: 'Material / Fabric', value: product.material },
+                                { title: 'Filling Material', value: product.filling_material },
+                                { title: 'Construction', value: product.construction_details },
+                                { title: 'Care Instructions', value: product.care_instructions },
+                                { title: 'Usage Recommendations', value: product.usage_recommendations },
+                            ].map((spec) => (
+                                spec.value && (
+                                    <div key={spec.title} style={{
+                                        padding: '1.5rem',
+                                        borderRadius: '1rem',
+                                        background: '#fff',
+                                        border: '1px solid #f0ece4',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '0.5rem',
+                                        transition: 'transform 0.2s',
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
+                                    }}>
+                                        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#00b4d8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            {spec.title}
+                                        </h3>
+                                        <p style={{ fontSize: '0.95rem', color: '#475569', lineHeight: 1.6 }}>
+                                            {spec.value}
+                                        </p>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
 

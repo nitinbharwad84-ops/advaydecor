@@ -62,6 +62,12 @@ CREATE TABLE IF NOT EXISTS public.products (
   category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   has_variants BOOLEAN DEFAULT FALSE,
   is_active BOOLEAN DEFAULT TRUE,
+  dimensions TEXT,
+  material TEXT,
+  filling_material TEXT,
+  construction_details TEXT,
+  care_instructions TEXT,
+  usage_recommendations TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

@@ -50,12 +50,18 @@ export async function POST(request: Request) {
         if (!isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
         const body = await request.json();
-        const { title, slug, description, base_price, category, has_variants, is_active, variants, images } = body;
+        const { 
+            title, slug, description, base_price, category, has_variants, is_active, variants, images,
+            dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
+        } = body;
 
         // Insert product
         const { data: product, error: productError } = await admin
             .from('products')
-            .insert({ title, slug, description, base_price, category, has_variants, is_active })
+            .insert({ 
+                title, slug, description, base_price, category, has_variants, is_active,
+                dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
+            })
             .select()
             .single();
 
@@ -103,14 +109,20 @@ export async function PUT(request: Request) {
         if (!isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
         const body = await request.json();
-        const { id, title, slug, description, base_price, category, has_variants, is_active, variants, images } = body;
+        const { 
+            id, title, slug, description, base_price, category, has_variants, is_active, variants, images,
+            dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
+        } = body;
 
         if (!id) return NextResponse.json({ error: 'Product ID required' }, { status: 400 });
 
         // Update product
         const { error: updateError } = await admin
             .from('products')
-            .update({ title, slug, description, base_price, category, has_variants, is_active })
+            .update({ 
+                title, slug, description, base_price, category, has_variants, is_active,
+                dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
+            })
             .eq('id', id);
 
         if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });

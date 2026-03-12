@@ -35,6 +35,9 @@ export default function AdminProductEditPage() {
     const [form, setForm] = useState({
         title: '', slug: '', description: '', base_price: '',
         category: '', has_variants: false, is_active: true,
+        dimensions: '', material: '', filling_material: '',
+        construction_details: '', care_instructions: '',
+        usage_recommendations: '',
     });
 
     const [variants, setVariants] = useState<{ id: string; variant_name: string; sku: string; price: string; stock_quantity: string; is_active: boolean }[]>([]);
@@ -77,6 +80,12 @@ export default function AdminProductEditPage() {
                         category: product.category,
                         has_variants: product.has_variants,
                         is_active: product.is_active,
+                        dimensions: product.dimensions || '',
+                        material: product.material || '',
+                        filling_material: product.filling_material || '',
+                        construction_details: product.construction_details || '',
+                        care_instructions: product.care_instructions || '',
+                        usage_recommendations: product.usage_recommendations || '',
                     });
                     setVariants(
                         (product.variants || []).map(v => ({
@@ -114,6 +123,12 @@ export default function AdminProductEditPage() {
                 category: form.category,
                 has_variants: form.has_variants,
                 is_active: form.is_active,
+                dimensions: form.dimensions,
+                material: form.material,
+                filling_material: form.filling_material,
+                construction_details: form.construction_details,
+                care_instructions: form.care_instructions,
+                usage_recommendations: form.usage_recommendations,
                 variants: form.has_variants
                     ? variants.map(v => ({
                         variant_name: v.variant_name,
@@ -398,10 +413,43 @@ export default function AdminProductEditPage() {
                                     </select>
                                 </div>
                             </div>
+                    </div>
+                </div>
+
+                {/* Detailed Specifications */}
+                <div style={cardStyle}>
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0a0a23', marginBottom: '1.25rem' }}>Detailed Specifications</h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div>
+                            <label style={labelStyle}>Dimensions</label>
+                            <input value={form.dimensions} onChange={(e) => setForm({ ...form, dimensions: e.target.value })} style={inputStyle} placeholder="e.g., 45cm x 45cm x 10cm" />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Material / Fabric</label>
+                            <input value={form.material} onChange={(e) => setForm({ ...form, material: e.target.value })} style={inputStyle} placeholder="e.g., Premium Velvet, Cotton" />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Filling Material</label>
+                            <input value={form.filling_material} onChange={(e) => setForm({ ...form, filling_material: e.target.value })} style={inputStyle} placeholder="e.g., Memory Foam, Polyester Fiber" />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Usage Recommendations</label>
+                            <input value={form.usage_recommendations} onChange={(e) => setForm({ ...form, usage_recommendations: e.target.value })} style={inputStyle} placeholder="e.g., Indoor use, Living room" />
                         </div>
                     </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                        <div>
+                            <label style={labelStyle}>Construction Details</label>
+                            <textarea rows={2} value={form.construction_details} onChange={(e) => setForm({ ...form, construction_details: e.target.value })} style={{ ...inputStyle, resize: 'none' }} placeholder="e.g., Hidden zipper, double-stitched edges..." />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Care Instructions</label>
+                            <textarea rows={2} value={form.care_instructions} onChange={(e) => setForm({ ...form, care_instructions: e.target.value })} style={{ ...inputStyle, resize: 'none' }} placeholder="e.g., Machine wash cold, do not bleach..." />
+                        </div>
+                    </div>
+                </div>
 
-                    {/* Media */}
+                {/* Media */}
                     <div style={cardStyle}>
                         <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0a0a23', marginBottom: '1.25rem' }}>Media</h2>
                         <label

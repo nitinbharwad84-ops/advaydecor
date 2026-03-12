@@ -17,6 +17,12 @@ export interface Product {
   category: string;
   has_variants: boolean;
   is_active: boolean;
+  dimensions?: string;
+  material?: string;
+  filling_material?: string;
+  construction_details?: string;
+  care_instructions?: string;
+  usage_recommendations?: string;
   created_at: string;
   // Joined data
   images?: ProductImage[];
