@@ -133,7 +133,7 @@ export default function AdminProductsPage() {
                                                 flexShrink: 0, overflow: 'hidden',
                                             }}>
                                                 {product.images?.[0] ? (
-                                                    <img src={product.images[0].image_url} alt={product.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    <img src={product.images[0].image_url} alt={product.title} width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                 ) : (
                                                     <Package size={18} style={{ color: '#9e9eb8' }} />
                                                 )}

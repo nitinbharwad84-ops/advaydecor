@@ -501,7 +501,7 @@ export default function AdminProductEditPage() {
                                             transition: 'transform 0.2s, opacity 0.2s'
                                         }}
                                     >
-                                        <img src={img.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
+                                        <img src={img.image_url} alt="" width={200} height={200} style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
                                         <button
                                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeImage(img.id); }}
                                             style={{
