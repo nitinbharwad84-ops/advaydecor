@@ -49,10 +49,14 @@ export async function middleware(request: NextRequest) {
     // ==============================
     // Enforce primary domain to prevent indexing of Vercel or Apex URLs
     if ((host === 'advaydecor.vercel.app' || host === 'advaydecor.in') && process.env.NODE_ENV === 'production') {
-        return NextResponse.redirect(
+        const redirectResponse = NextResponse.redirect(
             `https://www.advaydecor.in${pathname}${searchParams}`,
             301
         );
+        // Important: Redirects should also carry security headers for auditing tools
+        redirectResponse.headers.set('X-Frame-Options', 'DENY');
+        redirectResponse.headers.set('X-Content-Type-Options', 'nosniff');
+        return redirectResponse;
     }
 
     // ==============================
@@ -76,7 +80,7 @@ export async function middleware(request: NextRequest) {
 
                 if (result.limited) {
                     console.warn(`Rate limit hit: ${ip} on ${pathname} (profile: ${profile})`);
-                    return NextResponse.json(
+                    const errorResponse = NextResponse.json(
                         {
                             error: 'Too many requests. Please wait a moment and try again.',
                         },
@@ -85,9 +89,12 @@ export async function middleware(request: NextRequest) {
                             headers: {
                                 'Retry-After': String(Math.ceil(result.resetIn / 1000)),
                                 'X-RateLimit-Remaining': '0',
+                                'X-Frame-Options': 'DENY',
+                                'X-Content-Type-Options': 'nosniff',
                             },
                         }
                     );
+                    return errorResponse;
                 }
             }
         }
@@ -148,11 +155,18 @@ export async function middleware(request: NextRequest) {
         upgrade-insecure-requests;
     `.replace(/\s{2,}/g, ' ').trim();
 
-    response.headers.set('Content-Security-Policy', cspHeader);
-    response.headers.set('X-Frame-Options', 'DENY');
-    response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-    response.headers.set('X-XSS-Protection', '1; mode=block');
+    // Apply security headers to the response
+    const securityHeaders = {
+        'Content-Security-Policy': cspHeader,
+        'X-Frame-Options': 'DENY',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'X-XSS-Protection': '1; mode=block',
+    };
+
+    Object.entries(securityHeaders).forEach(([key, value]) => {
+        response.headers.set(key, value);
+    });
 
     return response;
 }
