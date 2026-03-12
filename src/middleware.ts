@@ -40,6 +40,21 @@ function getClientIP(request: NextRequest): string {
 }
 
 export async function middleware(request: NextRequest) {
+    const host = request.headers.get('host');
+    const searchParams = request.nextUrl.search;
+    const pathname = request.nextUrl.pathname;
+
+    // ==============================
+    // 0. Domain Redirection (SEO)
+    // ==============================
+    // Enforce primary domain to prevent indexing of Vercel URLs
+    if (host === 'advaydecor.vercel.app' && process.env.NODE_ENV === 'production') {
+        return NextResponse.redirect(
+            `https://advaydecor.in${pathname}${searchParams}`,
+            301
+        );
+    }
+
     // ==============================
     // 1. Rate Limiting (POST only)
     // ==============================

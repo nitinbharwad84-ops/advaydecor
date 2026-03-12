@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     title: "Advay Decor",
   },
   alternates: {
-    canonical: '/',
+    canonical: 'https://advaydecor.in',
   },
   icons: {
     icon: [
