@@ -102,6 +102,7 @@ export async function POST(request: Request) {
 
                 await sendEmail({
                     to: customerEmail,
+                    fromProfile: 'order',
                     subject: `Order Confirmed - #${order.id.substring(0, 8).toUpperCase()}`,
                     html: `
                         <div style="font-family: sans-serif; padding: 20px; color: #0a0a23; max-width: 600px; margin: auto; border: 1px solid #e8e4dc; border-radius: 12px;">

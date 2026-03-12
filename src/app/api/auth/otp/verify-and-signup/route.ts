@@ -48,6 +48,7 @@ export async function POST(request: Request) {
         try {
             await sendEmail({
                 to: email,
+                fromProfile: 'welcome',
                 subject: 'Welcome to AdvayDecor!',
                 html: `
                     <div style="font-family: sans-serif; padding: 20px; color: #0a0a23; max-width: 600px; margin: auto; border: 1px solid #e8e4dc; border-radius: 12px;">

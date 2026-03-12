@@ -41,6 +41,7 @@ export async function POST(request: Request) {
         // 3. Send Email
         await sendEmail({
             to: email,
+            fromProfile: 'otp',
             subject: 'Security Code to Change Email - AdvayDecor',
             html: `
                 <div style="font-family: sans-serif; padding: 20px; color: #0a0a23; max-width: 600px; margin: auto; border: 1px solid #e8e4dc; border-radius: 12px;">

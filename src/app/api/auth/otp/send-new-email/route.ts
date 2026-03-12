@@ -56,6 +56,7 @@ export async function POST(request: Request) {
         // 4. Send Email
         await sendEmail({
             to: newEmail,
+            fromProfile: 'otp',
             subject: 'Confirm your new email - AdvayDecor',
             html: `
                 <div style="font-family: sans-serif; padding: 20px; color: #0a0a23; max-width: 600px; margin: auto; border: 1px solid #e8e4dc; border-radius: 12px;">
