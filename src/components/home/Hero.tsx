@@ -3,7 +3,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export default function Hero() {
     const ref = useRef(null);
@@ -18,16 +19,22 @@ export default function Hero() {
 
     return (
         <section ref={ref} className="relative w-full min-h-screen overflow-hidden" style={{ minHeight: '100vh' }}>
-            {/* Background Image with Parallax */}
+            {/* Background Image with Parallax — now using Next.js Image for LCP optimization */}
             <motion.div
                 className="absolute inset-0 z-0"
                 style={{ y, scale }}
             >
-                <div
-                    className="w-full h-full bg-cover bg-center"
-                    style={{
-                        backgroundImage: `url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=80')`,
-                    }}
+                <Image
+                    src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=80"
+                    alt="Elegant living room with premium home decor by Advay Decor"
+                    fill
+                    priority
+                    fetchPriority="high"
+                    sizes="100vw"
+                    quality={80}
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxQf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJYvD6## truncated"
                 />
                 {/* Multi-layer gradient overlays for depth */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a23]/80 via-[#0a0a23]/40 to-[#0a0a23]/90" />

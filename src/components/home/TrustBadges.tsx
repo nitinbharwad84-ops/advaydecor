@@ -1,6 +1,3 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { Truck, Shield, Sparkles, Undo2 } from 'lucide-react';
 
 const badges = [
@@ -15,13 +12,9 @@ export default function TrustBadges() {
         <section style={{ padding: '4rem 0', background: '#ffffff', borderBottom: '1px solid #f0ece4' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
                 <div className="grid grid-cols-2 lg:grid-cols-4" style={{ gap: '1.5rem' }}>
-                    {badges.map((badge, index) => (
-                        <motion.div
+                    {badges.map((badge) => (
+                        <div
                             key={badge.label}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
                             className="group"
                             style={{
                                 display: 'flex',
@@ -55,7 +48,7 @@ export default function TrustBadges() {
                                     {badge.sub}
                                 </p>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
             </div>

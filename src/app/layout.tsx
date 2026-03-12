@@ -1,4 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+});
 
 export const viewport: Viewport = {
   themeColor: "#00b4d8",
@@ -81,50 +97,35 @@ export const metadata: Metadata = {
   },
 };
 
-// Site Name JSON-LD for Google
-const SiteNameJsonLd = () => (
-  <Script id="sitename-jsonld" type="application/ld+json" strategy="afterInteractive">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Advay Decor",
-      "alternateName": ["AdvayDecor", "Advaya Decor"],
-      "url": "https://advaydecor.in"
-    })}
-  </Script>
-);
-
-// PWA Service Worker Registration
-const PwaRegistration = () => (
-  <Script id="register-sw" strategy="afterInteractive">
-    {`
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js').then(
-            function(registration) {
-              console.log('PWA: Service Worker registered successfully');
-            },
-            function(err) {
-              console.log('PWA: Service Worker registration failed: ', err);
-            }
-          );
-        });
-      }
-    `}
-  </Script>
-);
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to external origins for faster resource loading */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+        {/* Inline JSON-LD for site name — no need for afterInteractive */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Advay Decor",
+              "alternateName": ["AdvayDecor", "Advaya Decor"],
+              "url": "https://advaydecor.in"
+            }),
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
-        <SiteNameJsonLd />
         {/* ======================= */}
-        {/* Google Analytics 4 (GA4) */}
+        {/* Google Analytics 4 (GA4) + Google Ads Tag — Unified */}
         {/* ======================= */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <>
@@ -138,6 +139,7 @@ export default function RootLayout({
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+                gtag('config', 'AW-17990232628');
               `}
             </Script>
           </>
@@ -160,22 +162,6 @@ export default function RootLayout({
           </Script>
         )}
 
-        {/* ======================= */}
-        {/* Google Tag (AW-17990232628) */}
-        {/* ======================= */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-17990232628"
-          strategy="afterInteractive"
-        />
-        <Script id="google-tag-manual" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-17990232628');
-          `}
-        </Script>
-
         <Toaster
           position="top-center"
           toastOptions={{
@@ -189,7 +175,22 @@ export default function RootLayout({
             },
           }}
         />
-        <PwaRegistration />
+        <Script id="register-sw" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                  function(registration) {
+                    console.log('PWA: Service Worker registered successfully');
+                  },
+                  function(err) {
+                    console.log('PWA: Service Worker registration failed: ', err);
+                  }
+                );
+              });
+            }
+          `}
+        </Script>
         <ConditionalNavbar />
         <main className="flex-1">
           {children}

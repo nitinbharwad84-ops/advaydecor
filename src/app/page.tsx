@@ -1,15 +1,20 @@
+import dynamic from 'next/dynamic';
 import Hero from '@/components/home/Hero';
 import TrustBadges from '@/components/home/TrustBadges';
 import FeaturedCollection from '@/components/home/FeaturedCollection';
-import HomeHighlights from '@/components/home/HomeHighlights';
+
+// Lazy load below-fold component to reduce initial JS bundle
+const HomeHighlights = dynamic(() => import('@/components/home/HomeHighlights'), {
+    loading: () => <div style={{ minHeight: '400px' }} />,
+});
 
 export default function HomePage() {
-  return (
-    <>
-      <Hero />
-      <TrustBadges />
-      <FeaturedCollection />
-      <HomeHighlights />
-    </>
-  );
+    return (
+        <>
+            <Hero />
+            <TrustBadges />
+            <FeaturedCollection />
+            <HomeHighlights />
+        </>
+    );
 }
