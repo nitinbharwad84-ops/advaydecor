@@ -73,6 +73,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/cushions/embroidered-covers',
+        destination: '/shop?category=Embroidered',
+      },
+      {
+        source: '/cushions/linen-covers',
+        destination: '/shop?category=Linen',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
