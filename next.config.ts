@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['advaydecor.in', 'advaydecor.vercel.app']
+      allowedOrigins: ['www.advaydecor.in', 'advaydecor.in', 'advaydecor.vercel.app']
     }
   },
   async headers() {
