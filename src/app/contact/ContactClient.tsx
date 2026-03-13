@@ -35,7 +35,7 @@ export default function ContactClient() {
     const contactInfo = [
         { icon: Mail, label: 'support@advaydecor.in', sub: 'For order related queries' },
         { icon: Mail, label: 'help@advaydecor.in', sub: 'General support & inquiries' },
-        { icon: Phone, label: '+91 98765 43210', sub: 'Mon-Sat, 10am–7pm IST' },
+        { icon: Phone, label: '+91 98335 53470', sub: 'Mon-Sat, 10am–7pm IST' },
         { icon: MapPin, label: 'Mumbai, Maharashtra', sub: 'India' },
         { icon: Clock, label: 'Mon - Sat', sub: '10:00 AM - 7:00 PM IST' },
     ];
@@ -202,7 +202,7 @@ export default function ContactClient() {
                                         type="tel"
                                         value={formData.phone}
                                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        placeholder="+91 98765 43210"
+                                        placeholder="+91 98335 53470"
                                         style={{
                                             width: '100%',
                                             padding: '0.75rem 1rem',
