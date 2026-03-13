@@ -42,7 +42,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
             'AdvayDecor',
         ],
         alternates: {
-            canonical: `/product/${params.slug}`,
+            canonical: `https://www.advaydecor.in/product/${params.slug}`,
         },
         openGraph: {
             title: product.title,

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
         'living room cushion trends',
     ],
     alternates: {
-        canonical: '/trends/2026-boucle-cushions',
+        canonical: 'https://www.advaydecor.in/trends/2026-boucle-cushions',
     },
     openGraph: {
         title: 'Top Bouclé Cushion Trends 2026',

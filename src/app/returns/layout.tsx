@@ -4,7 +4,7 @@ export const metadata: Metadata = {
     title: 'Returns & Exchanges | AdvayDecor',
     description: 'Hassle-free returns and exchanges. We stand by the quality of our artisanal products and ensure your complete satisfaction.',
     alternates: {
-        canonical: '/returns',
+        canonical: 'https://www.advaydecor.in/returns',
     },
     openGraph: {
         title: 'Returns & Exchanges | AdvayDecor',

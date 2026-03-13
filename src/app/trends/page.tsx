@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     title: 'Home Decor Trends & Inspiration | AdvayDecor Blog',
     description: 'Explore the latest home decor trends, styling tips, and seasonal guides for cushion covers and accessories. Expert advice from our Mumbai studio.',
     alternates: {
-        canonical: '/trends',
+        canonical: 'https://www.advaydecor.in/trends',
     },
 };
 

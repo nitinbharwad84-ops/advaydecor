@@ -4,7 +4,7 @@ export const metadata: Metadata = {
     title: 'Frequently Asked Questions | AdvayDecor',
     description: 'Help with sizes, shipping, return policies, and cleaning care for our artisanal home products. Find answers immediately.',
     alternates: {
-        canonical: '/faq',
+        canonical: 'https://www.advaydecor.in/faq',
     },
     openGraph: {
         title: 'AdvayDecor Help | FAQ',

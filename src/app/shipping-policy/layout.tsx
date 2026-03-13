@@ -4,7 +4,7 @@ export const metadata: Metadata = {
     title: 'Shipping Policy — Pan-India Delivery | AdvayDecor',
     description: 'Fast and secure nationwide delivery for artisanal home decor. Track your orders and understand our delivery timelines across India.',
     alternates: {
-        canonical: '/shipping-policy',
+        canonical: 'https://www.advaydecor.in/shipping-policy',
     },
     openGraph: {
         title: 'Shipping Policy | AdvayDecor',

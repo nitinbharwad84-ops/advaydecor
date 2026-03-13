@@ -8,13 +8,13 @@ export async function generateMetadata(): Promise<Metadata> {
         description: seo.description,
         keywords: seo.keywords,
         alternates: {
-            canonical: '/shop',
+            canonical: 'https://www.advaydecor.in/shop',
         },
         openGraph: {
             title: seo.ogTitle || seo.title,
             description: seo.ogDescription || seo.description,
             type: 'website',
-            url: '/shop',
+            url: 'https://www.advaydecor.in/shop',
         },
     };
 }

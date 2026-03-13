@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
         description: seo.description,
         keywords: seo.keywords,
         alternates: {
-            canonical: '/story',
+            canonical: 'https://www.advaydecor.in/story',
         },
         openGraph: {
             title: seo.ogTitle || seo.title,
