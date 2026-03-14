@@ -96,7 +96,7 @@ export default function ShopClient({ initialProducts, initialCategory = 'All' }:
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}
                     >
-                        Curated linen, embroidered & boucl\u00E9 cushions for sofas. Discover premium artistic decor to match your space.
+                        Curated linen, embroidered & boucl cushions for sofas. Discover premium artistic decor to match your space.
                     </motion.p>
                 </div>
             </section>
