@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Product } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 
@@ -26,12 +25,14 @@ export default function FeaturedCollectionClient({ products }: FeaturedCollectio
                             <div style={{ borderRadius: '1rem', overflow: 'hidden', background: '#fff', border: '1px solid #f0ece4', transition: 'all 0.5s ease' }}>
                                 {/* Image */}
                                 <div className="relative overflow-hidden" style={{ aspectRatio: '1/1', background: '#f5f0e8' }}>
-                                    <Image
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
                                         src={mainImage}
                                         alt={product.title}
-                                        fill
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        loading="lazy"
                                         className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        style={{ position: 'absolute', width: '100%', height: '100%', inset: 0, objectFit: 'cover' }}
+                                        onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK; }}
                                     />
                                     <div className="absolute inset-0 transition-all duration-500"
                                         style={{ background: 'linear-gradient(to top, rgba(10,10,35,0.15) 0%, transparent 50%)' }} />
