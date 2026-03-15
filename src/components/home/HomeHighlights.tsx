@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Quote } from 'lucide-react';
 
@@ -16,7 +16,7 @@ export default function HomeHighlights() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1 }}>
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -32,7 +32,7 @@ export default function HomeHighlights() {
                         >
                             The AdvayDecor Difference
                         </h2>
-                    </motion.div>
+                    </m.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: '1.5rem' }}>
                         {[
@@ -55,7 +55,7 @@ export default function HomeHighlights() {
                                 gradient: 'linear-gradient(135deg, rgba(0,180,216,0.06), rgba(200,169,81,0.02))',
                             },
                         ].map((item, index) => (
-                            <motion.div
+                            <m.div
                                 key={item.num}
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -83,7 +83,7 @@ export default function HomeHighlights() {
                                         {item.desc}
                                     </p>
                                 </div>
-                            </motion.div>
+                            </m.div>
                         ))}
                     </div>
                 </div>
@@ -103,7 +103,7 @@ export default function HomeHighlights() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
@@ -120,7 +120,7 @@ export default function HomeHighlights() {
                         <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginTop: '1.5rem' }}>
                             — Nate Berkus
                         </p>
-                    </motion.div>
+                    </m.div>
                 </div>
             </section>
 
@@ -133,7 +133,7 @@ export default function HomeHighlights() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1 }}>
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -150,7 +150,7 @@ export default function HomeHighlights() {
                             Explore our handpicked collection and find the perfect piece to complement your home.
                         </p>
                         <Link href="/shop">
-                            <motion.button
+                            <m.button
                                 className="group inline-flex items-center font-semibold text-white"
                                 style={{
                                     gap: '0.5rem',
@@ -167,9 +167,9 @@ export default function HomeHighlights() {
                             >
                                 Shop the Collection
                                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                            </motion.button>
+                            </m.button>
                         </Link>
-                    </motion.div>
+                    </m.div>
                 </div>
             </section>
         </>

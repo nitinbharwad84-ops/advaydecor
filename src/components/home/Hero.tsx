@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { m, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,7 +20,7 @@ export default function Hero() {
     return (
         <section ref={ref} className="relative w-full min-h-screen overflow-hidden" style={{ minHeight: '100vh' }}>
             {/* Background Image with Parallax — now using Next.js Image for LCP optimization */}
-            <motion.div
+            <m.div
                 className="absolute inset-0 z-0"
                 style={{ y, scale }}
             >
@@ -40,7 +40,7 @@ export default function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a23]/80 via-[#0a0a23]/40 to-[#0a0a23]/90" />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a23]/60 via-transparent to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a23]/50 via-transparent to-transparent" />
-            </motion.div>
+            </m.div>
 
             {/* Decorative Orbs */}
             <div className="absolute top-32 right-16 w-80 h-80 rounded-full animate-float hidden lg:block"
@@ -57,7 +57,7 @@ export default function Hero() {
             }} />
 
             {/* Content */}
-            <motion.div
+            <m.div
                 className="relative z-10 flex items-center justify-center"
                 style={{ opacity, minHeight: '100vh' }}
             >
@@ -92,13 +92,13 @@ export default function Hero() {
                                 Your{' '}
                                 <span className="relative" style={{ color: '#00b4d8' }}>
                                     Vibe
-                                    <motion.svg
+                                    <m.svg
                                         className="absolute w-full"
                                         style={{ bottom: '-6px', left: 0 }}
                                         viewBox="0 0 300 12"
                                         fill="none"
                                     >
-                                        <motion.path
+                                        <m.path
                                             d="M2 8C50 2 100 4 150 6C200 8 250 4 298 7"
                                             stroke="#00b4d8"
                                             strokeWidth="3"
@@ -107,7 +107,7 @@ export default function Hero() {
                                             animate={{ pathLength: 1 }}
                                             transition={{ delay: 1.2, duration: 0.8, ease: 'easeInOut' }}
                                         />
-                                    </motion.svg>
+                                    </m.svg>
                                 </span>
                             </span>
                         </h1>
@@ -126,7 +126,7 @@ export default function Hero() {
                             style={{ gap: '1rem', animationDelay: '0.9s' }}
                         >
                             <Link href="/shop">
-                                <motion.button
+                                <m.button
                                     className="group inline-flex items-center font-semibold text-white"
                                     style={{
                                         gap: '0.5rem',
@@ -143,10 +143,10 @@ export default function Hero() {
                                 >
                                     Explore Collection
                                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                                </motion.button>
+                                </m.button>
                             </Link>
                             <Link href="/story">
-                                <motion.button
+                                <m.button
                                     className="font-semibold text-white"
                                     style={{
                                         padding: '1rem 2rem',
@@ -161,15 +161,15 @@ export default function Hero() {
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     Our Story
-                                </motion.button>
+                                </m.button>
                             </Link>
                         </div>
                     </div>
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Scroll Indicator */}
-            <motion.div
+            <m.div
                 className="absolute left-1/2 z-10 flex flex-col items-center"
                 style={{ bottom: '2rem', transform: 'translateX(-50%)', gap: '0.5rem' }}
                 initial={{ opacity: 0 }}
@@ -177,16 +177,16 @@ export default function Hero() {
                 transition={{ delay: 1.5 }}
             >
                 <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Scroll</span>
-                <motion.div
+                <m.div
                     style={{ width: '1.5rem', height: '2.5rem', borderRadius: '9999px', border: '2px solid rgba(255,255,255,0.15)', display: 'flex', justifyContent: 'center', paddingTop: '0.5rem' }}
                 >
-                    <motion.div
+                    <m.div
                         style={{ width: '3px', height: '10px', borderRadius: '9999px', background: '#00b4d8' }}
                         animate={{ y: [0, 12, 0] }}
                         transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
                     />
-                </motion.div>
-            </motion.div>
+                </m.div>
+            </m.div>
         </section>
     );
 }

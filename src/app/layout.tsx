@@ -22,6 +22,7 @@ import "./globals.css";
 import ConditionalNavbar from "@/components/layout/ConditionalNavbar";
 import ConditionalFooter from "@/components/layout/ConditionalFooter";
 import { Toaster } from "react-hot-toast";
+import { LazyMotion, domAnimation } from "framer-motion";
 
 import Script from 'next/script';
 
@@ -189,11 +190,13 @@ export default function RootLayout({
             }
           `}
         </Script>
-        <ConditionalNavbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <ConditionalFooter />
+        <LazyMotion features={domAnimation} strict>
+          <ConditionalNavbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <ConditionalFooter />
+        </LazyMotion>
       </body>
     </html>
   );

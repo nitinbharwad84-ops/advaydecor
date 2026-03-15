@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { m, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, User, Menu, X, ChevronRight, Search } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { useUserAuthStore } from '@/lib/auth-store';
@@ -53,9 +54,7 @@ export default function Navbar() {
 
     return (
         <>
-            {/* CSS variable for nav height - used by pages for top padding */}
             <style jsx global>{`
-                :root { --nav-height: ${showSolid ? '64px' : '72px'}; }
                 @keyframes spin { to { transform: rotate(360deg); } }
             `}</style>
 
@@ -89,8 +88,9 @@ export default function Navbar() {
                 }}>
                     {/* Logo */}
                     <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div
-                            className="hover:scale-[1.03] active:scale-[0.97] transition-transform duration-200"
+                        <m.div
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                             style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                         >
                             <Image
@@ -115,7 +115,7 @@ export default function Navbar() {
                                 </span>
                                 <span style={{ color: '#00b4d8' }}>Decor</span>
                             </span>
-                        </div>
+                        </m.div>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -146,7 +146,8 @@ export default function Navbar() {
                                 >
                                     {link.name}
                                     {isActive && (
-                                        <div
+                                        <m.div
+                                            layoutId="activeNavPill"
                                             style={{
                                                 position: 'absolute',
                                                 bottom: '2px',
@@ -157,6 +158,7 @@ export default function Navbar() {
                                                 borderRadius: '9999px',
                                                 background: '#00b4d8',
                                             }}
+                                            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                                         />
                                     )}
                                 </Link>
@@ -257,8 +259,9 @@ export default function Navbar() {
                         >
                             <ShoppingBag size={18} strokeWidth={1.8} />
                             {itemCount > 0 && (
-                                <span
-                                    className="animate-scale-in"
+                                <m.span
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
                                     style={{
                                         position: 'absolute',
                                         top: '2px',
@@ -277,7 +280,7 @@ export default function Navbar() {
                                     }}
                                 >
                                     {itemCount}
-                                </span>
+                                </m.span>
                             )}
                         </button>
 
@@ -309,40 +312,49 @@ export default function Navbar() {
             </header>
 
             {/* Mobile Menu Overlay */}
-            {isMobileOpen && (
-                <div
-                    style={{ position: 'fixed', inset: 0, zIndex: 40 }}
-                    className="md:hidden"
-                >
-                    {/* Backdrop */}
-                    <div
-                        style={{
-                            position: 'absolute',
-                            inset: 0,
-                            background: 'rgba(10,10,35,0.6)',
-                            backdropFilter: 'blur(4px)',
-                        }}
-                        className="animate-scale-in"
-                        onClick={() => setIsMobileOpen(false)}
-                    />
-
-                    {/* Slide-in Panel */}
-                    <div
-                        className="animate-slide-in-right"
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            width: '85%',
-                            maxWidth: '360px',
-                            height: '100%',
-                            background: '#fdfbf7',
-                            boxShadow: '-8px 0 32px rgba(0,0,0,0.15)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
+            <AnimatePresence>
+                {isMobileOpen && (
+                    <m.div
+                        style={{ position: 'fixed', inset: 0, zIndex: 40 }}
+                        className="md:hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                     >
-                        {/* Panel Header */}
+                        {/* Backdrop */}
+                        <m.div
+                            style={{
+                                position: 'absolute',
+                                inset: 0,
+                                background: 'rgba(10,10,35,0.6)',
+                                backdropFilter: 'blur(4px)',
+                            }}
+                            onClick={() => setIsMobileOpen(false)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        />
+
+                        {/* Slide-in Panel */}
+                        <m.div
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                width: '85%',
+                                maxWidth: '360px',
+                                height: '100%',
+                                background: '#fdfbf7',
+                                boxShadow: '-8px 0 32px rgba(0,0,0,0.15)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                        >
+                            {/* Panel Header */}
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -392,10 +404,11 @@ export default function Navbar() {
                                 {navLinks.map((link, index) => {
                                     const isActive = pathname === link.href;
                                     return (
-                                        <div
+                                        <m.div
                                             key={link.name}
-                                            className="animate-slide-in-right"
-                                            style={{ animationDelay: `${0.1 + index * 0.05}s`, animationFillMode: 'both' }}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.1 + index * 0.05 }}
                                         >
                                             <Link
                                                 href={link.href}
@@ -428,14 +441,15 @@ export default function Navbar() {
                                                 </span>
                                                 <ChevronRight size={16} style={{ color: isActive ? '#00b4d8' : '#9e9eb8' }} />
                                             </Link>
-                                        </div>
+                                        </m.div>
                                     );
                                 })}
 
                                 {/* Mobile Search Link */}
-                                <div
-                                    className="animate-slide-in-right"
-                                    style={{ animationDelay: `${0.1 + navLinks.length * 0.05}s`, animationFillMode: 'both' }}
+                                <m.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.1 + navLinks.length * 0.05 }}
                                 >
                                     <Link
                                         href="/shop"
@@ -459,18 +473,18 @@ export default function Navbar() {
                                         </span>
                                         <ChevronRight size={16} style={{ color: '#9e9eb8' }} />
                                     </Link>
-                                </div>
+                                </m.div>
                             </nav>
 
                             {/* Bottom — auth-aware */}
-                            <div
-                                className="animate-fade-in-up"
+                            <m.div
                                 style={{
                                     padding: '1.25rem 1.5rem',
                                     borderTop: '1px solid #f0ece4',
-                                    animationDelay: '0.4s',
-                                    animationFillMode: 'both',
                                 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.4 }}
                             >
                                 {isAuthenticated ? (
                                     <>
@@ -522,10 +536,11 @@ export default function Navbar() {
                                         Sign In / Create Account
                                     </Link>
                                 )}
-                            </div>
-                        </div>
-                    </div>
+                            </m.div>
+                        </m.div>
+                    </m.div>
                 )}
+            </AnimatePresence>
         </>
     );
 }
