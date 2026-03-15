@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { createAdminClient } from "@/lib/supabase-admin";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,89 +27,82 @@ import { LazyMotion, domAnimation } from "framer-motion";
 
 import Script from 'next/script';
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.advaydecor.in'),
-  title: "Advay Decor: Premium Home Decor & Cushion Covers Online India",
-  description: "Advay Decor offers artisan cushions, linen covers & designer home decor. Pan-India shipping directly from our Mumbai studio.",
-  applicationName: "Advay Decor",
-  keywords: [
-    "Advay Decor",
-    "AdvayDecor",
-    "Advaya Decor",
-    "Advy Decor",
-    "Advey Decor",
-    "Advay Dekore",
-    "Advaya",
-    "home decor online India",
-    "cushion covers online India",
-    "buy cushions online",
-    "luxury cushion covers India",
-    "premium cushion covers",
-    "hand-embroidered cushions",
-    "designer cushion covers",
-    "velvet cushion covers Mumbai",
-    "artisan home accessories",
-    "embroidered cushion covers",
-    "linen pillow covers India",
-    "modern home decor studio",
-    "handmade home decor Mumbai",
-    "sofa cushion sets Mumbai",
-    "high-end home textiles",
-    "living room styling India",
-    "bouclé cushions 2026",
-    "artisan wall art cushions",
-    "boutique home decor India",
-    "interior design",
-    "Advay online store",
-  ],
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Advay Decor",
-  },
-  icons: {
-    icon: [
-      { url: "/logo.svg" },
-      { url: "/logo.svg", type: "image/svg+xml" },
-    ],
-    shortcut: "/logo.svg",
-    apple: "/logo.svg",
-  },
-  openGraph: {
+async function getSeoSettings() {
+  try {
+    const admin = createAdminClient();
+    const { data: settings } = await admin.from('seo_settings').select('key, value');
+    const config: Record<string, string> = {};
+    settings?.forEach(s => { config[s.key] = s.value; });
+    return config;
+  } catch (error) {
+    console.error('Error fetching SEO settings:', error);
+    return {};
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSeoSettings();
+  const googleVerification = settings.google_verification || "GVNgZZ_0bSD0QJuRyvEBEbGuNuX1xgZ296vLruj4_JY";
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.advaydecor.in'),
     title: "Advay Decor: Premium Home Decor & Cushion Covers Online India",
     description: "Advay Decor offers artisan cushions, linen covers & designer home decor. Pan-India shipping directly from our Mumbai studio.",
-    type: "website",
-    siteName: "Advay Decor",
-    images: [
-      {
-        url: "/logo.svg",
-        width: 800,
-        height: 600,
-        alt: "Advay Decor Logo",
-      },
+    applicationName: "Advay Decor",
+    keywords: [
+      "Advay Decor", "AdvayDecor", "Advaya Decor", "Advy Decor", "Advey Decor", "Advay Dekore", "Advaya",
+      "home decor online India", "cushion covers online India", "buy cushions online", "luxury cushion covers India",
+      "premium cushion covers", "hand-embroidered cushions", "designer cushion covers", "velvet cushion covers Mumbai",
+      "artisan home accessories", "embroidered cushion covers", "linen pillow covers India", "modern home decor studio",
+      "handmade home decor Mumbai", "sofa cushion sets Mumbai", "high-end home textiles", "living room styling India",
+      "bouclé cushions 2026", "artisan wall art cushions", "boutique home decor India", "interior design", "Advay online store",
     ],
-  },
-  verification: {
-    google: "GVNgZZ_0bSD0QJuRyvEBEbGuNuX1xgZ296vLruj4_JY",
-  },
-};
+    manifest: "/manifest.json",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: "Advay Decor",
+    },
+    icons: {
+      icon: [{ url: "/logo.svg" }, { url: "/logo.svg", type: "image/svg+xml" }],
+      shortcut: "/logo.svg",
+      apple: "/logo.svg",
+    },
+    openGraph: {
+      title: "Advay Decor: Premium Home Decor & Cushion Covers Online India",
+      description: "Advay Decor offers artisan cushions, linen covers & designer home decor. Pan-India shipping directly from our Mumbai studio.",
+      type: "website",
+      siteName: "Advay Decor",
+      images: [{ url: "/logo.svg", width: 800, height: 600, alt: "Advay Decor Logo" }],
+    },
+    verification: {
+      google: googleVerification,
+    },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSeoSettings();
+
+  const ga4Id = settings.ga4_measurement_id || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const gtagId = settings.google_tag_id || "AW-17990232628";
+  const pixelId = settings.meta_pixel_id || process.env.NEXT_PUBLIC_META_PIXEL_ID;
+
+  // Primary ID for loading the script
+  const primaryTrackingId = ga4Id || gtagId;
+
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
       <head>
-        {/* Preconnect to external origins for faster resource loading */}
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://awkaeeteelujitzgwzfr.supabase.co" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://awkaeeteelujitzgwzfr.supabase.co" />
 
-        {/* Inline JSON-LD for site name — no need for afterInteractive */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -123,13 +117,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
-        {/* ======================= */}
-        {/* Google Analytics 4 (GA4) + Google Ads Tag — Unified */}
-        {/* ======================= */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+        {/* Unified Tracking Scripts */}
+        {primaryTrackingId && (
           <>
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${primaryTrackingId}`}
               strategy="afterInteractive"
             />
             <Script id="google-analytics" strategy="afterInteractive">
@@ -137,14 +129,14 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
-                gtag('config', 'AW-17990232628');
+                ${ga4Id ? `gtag('config', '${ga4Id}');` : ''}
+                ${gtagId ? `gtag('config', '${gtagId}');` : ''}
               `}
             </Script>
           </>
         )}
 
-        {process.env.NEXT_PUBLIC_META_PIXEL_ID && (
+        {pixelId && (
           <Script id="meta-pixel" strategy="lazyOnload">
             {`
               !function(f,b,e,v,n,t,s)
@@ -155,7 +147,7 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '${process.env.NEXT_PUBLIC_META_PIXEL_ID}');
+              fbq('init', '${pixelId}');
               fbq('track', 'PageView');
             `}
           </Script>
