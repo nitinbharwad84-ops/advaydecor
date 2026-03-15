@@ -101,6 +101,7 @@ export default function Navbar() {
                                 height={36}
                                 style={{ objectFit: 'contain' }}
                                 priority
+                                fetchPriority="high"
                             />
                             <span
                                 className="font-[family-name:var(--font-display)]"
