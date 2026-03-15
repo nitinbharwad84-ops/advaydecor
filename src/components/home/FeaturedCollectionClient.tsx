@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type { Product } from '@/types';
 import { formatCurrency } from '@/lib/utils';
@@ -17,12 +16,10 @@ export default function FeaturedCollectionClient({ products }: FeaturedCollectio
             {products.map((product, index) => {
                 const mainImage = product.images?.[0]?.image_url || FALLBACK;
                 return (
-                    <motion.div
+                    <div
                         key={product.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-50px' }}
-                        transition={{ delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
+                        className="animate-fade-in-up"
+                        style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
                     >
                         <Link href={`/product/${product.slug}`} className="group block">
                             <div style={{ borderRadius: '1rem', overflow: 'hidden', background: '#fff', border: '1px solid #f0ece4', transition: 'all 0.5s ease' }}>
@@ -76,7 +73,7 @@ export default function FeaturedCollectionClient({ products }: FeaturedCollectio
                                 </div>
                             </div>
                         </Link>
-                    </motion.div>
+                    </div>
                 );
             })}
         </div>
