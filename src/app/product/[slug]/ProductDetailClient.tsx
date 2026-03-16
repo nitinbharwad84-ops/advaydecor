@@ -287,6 +287,35 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                                 onIndexChange={setActiveImageIndex}
                                 showThumbnails={false}
                             />
+
+                            {/* Mobile Thumbnails - Visible only on small screens */}
+                            <div className="flex lg:hidden flex-wrap gap-2 mt-4">
+                                {currentImages.map((img, index) => (
+                                    <button
+                                        key={img.id}
+                                        onClick={() => setActiveImageIndex(index)}
+                                        style={{
+                                            position: 'relative',
+                                            width: 'calc(20% - 0.5rem)',
+                                            aspectRatio: '1/1',
+                                            borderRadius: '0.5rem',
+                                            overflow: 'hidden',
+                                            border: activeImageIndex === index ? '2px solid #00b4d8' : '1px solid #f0ece4',
+                                            transition: 'all 0.2s',
+                                            cursor: 'pointer',
+                                            background: 'transparent',
+                                            padding: 0,
+                                            minWidth: '50px'
+                                        }}
+                                    >
+                                        <img
+                                            src={img.image_url}
+                                            alt={`View ${index + 1}`}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
                         </m.div>
 
                         {/* Right: Product Info */}
@@ -409,8 +438,8 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
 
                     {/* Thumbnails + Pincode Checker - Full width row */}
                     <div className="flex flex-col md:flex-row gap-8 items-start w-full" style={{ marginTop: '2rem' }}>
-                        {/* Thumbnails */}
-                        <div className="flex-1 w-full flex flex-wrap gap-3">
+                        {/* Thumbnails - Hidden on small screens, visible on large screens */}
+                        <div className="hidden lg:flex flex-1 w-full flex-wrap gap-3">
                             {currentImages.map((img, index) => (
                                 <button
                                     key={img.id}
