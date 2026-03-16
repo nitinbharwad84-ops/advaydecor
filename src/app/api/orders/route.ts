@@ -71,6 +71,22 @@ export async function POST(request: Request) {
                     }
                 }
                 finalCouponCode = coupon.code;
+
+                // Final check for user_limit during order placement
+                if (coupon.user_limit !== null && user) {
+                    const { count } = await admin
+                        .from('orders')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('user_id', user.id)
+                        .ilike('coupon_code', coupon_code)
+                        .not('status', 'eq', 'Cancelled');
+
+                    if (count !== null && count >= coupon.user_limit) {
+                        finalDiscount = 0;
+                        finalCouponCode = null;
+                        // We don't block the whole order, but we remove the invalid coupon
+                    }
+                }
             }
         }
 

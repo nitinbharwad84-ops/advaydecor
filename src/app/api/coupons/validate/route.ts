@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
 
 export async function POST(req: Request) {
     try {
@@ -33,6 +34,27 @@ export async function POST(req: Request) {
 
         if (cartTotal < coupon.min_order_amount) {
             return NextResponse.json({ error: `This coupon requires a minimum order of ₹${coupon.min_order_amount}` }, { status: 400 });
+        }
+
+        // Check per-user limit
+        if (coupon.user_limit !== null) {
+            const supabase = await createServerSupabaseClient();
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                const { count, error: countError } = await admin
+                    .from('orders')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', user.id)
+                    .ilike('coupon_code', code)
+                    .not('status', 'eq', 'Cancelled');
+
+                if (countError) {
+                    console.error('Error checking coupon usage:', countError);
+                } else if (count !== null && count >= coupon.user_limit) {
+                    return NextResponse.json({ error: `You have already used this coupon ${count} times (limit: ${coupon.user_limit})` }, { status: 400 });
+                }
+            }
         }
 
         // Calculate discount amount

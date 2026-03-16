@@ -14,6 +14,7 @@ interface Coupon {
     max_discount_amount: number | null;
     is_active: boolean;
     expires_at: string | null;
+    user_limit: number | null;
 }
 
 export default function AdminCouponsPage() {
@@ -30,6 +31,7 @@ export default function AdminCouponsPage() {
     const [maxDiscount, setMaxDiscount] = useState('');
     const [isActive, setIsActive] = useState(true);
     const [expiresAt, setExpiresAt] = useState('');
+    const [userLimit, setUserLimit] = useState('');
 
     useEffect(() => {
         fetchCoupons();
@@ -64,6 +66,7 @@ export default function AdminCouponsPage() {
             setMaxDiscount(coupon.max_discount_amount ? coupon.max_discount_amount.toString() : '');
             setIsActive(coupon.is_active);
             setExpiresAt(coupon.expires_at ? new Date(coupon.expires_at).toISOString().split('T')[0] : '');
+            setUserLimit(coupon.user_limit ? coupon.user_limit.toString() : '');
         } else {
             setEditingCoupon(null);
             setCode('');
@@ -73,6 +76,7 @@ export default function AdminCouponsPage() {
             setMaxDiscount('');
             setIsActive(true);
             setExpiresAt('');
+            setUserLimit('');
         }
         setIsModalOpen(true);
     };
@@ -88,6 +92,7 @@ export default function AdminCouponsPage() {
                 max_discount_amount: maxDiscount ? parseFloat(maxDiscount) : null,
                 is_active: isActive,
                 expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
+                user_limit: userLimit ? parseInt(userLimit) : null,
             };
 
             const url = editingCoupon ? `/api/admin/coupons/${editingCoupon.id}` : '/api/admin/coupons';
@@ -199,6 +204,12 @@ export default function AdminCouponsPage() {
                                         {coupon.expires_at ? new Date(coupon.expires_at).toLocaleDateString() : 'Never'}
                                     </span>
                                 </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                                    <span style={{ color: '#64748b' }}>User Limit:</span>
+                                    <span style={{ fontWeight: 500, color: '#0a0a23' }}>
+                                        {coupon.user_limit ? `${coupon.user_limit} uses` : 'Unlimited'}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -286,6 +297,18 @@ export default function AdminCouponsPage() {
                                         type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)}
                                         style={{ width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #e5e7eb', outline: 'none', fontSize: '0.9rem' }}
                                     />
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '0.5rem' }}>Usage Limit per User</label>
+                                        <input
+                                            type="number" min="1" value={userLimit} onChange={(e) => setUserLimit(e.target.value)}
+                                            placeholder="Unlimited"
+                                            style={{ width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #e5e7eb', outline: 'none', fontSize: '0.9rem' }}
+                                        />
+                                        <p style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '0.25rem' }}>Leave empty for no limit</p>
+                                    </div>
                                 </div>
 
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginTop: '0.5rem' }}>

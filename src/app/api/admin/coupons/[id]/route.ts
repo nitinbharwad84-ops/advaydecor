@@ -14,7 +14,7 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
         if (!isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
         const body = await req.json();
-        const { code, discount_type, discount_value, min_order_amount, max_discount_amount, is_active, expires_at } = body;
+        const { code, discount_type, discount_value, min_order_amount, max_discount_amount, is_active, expires_at, user_limit } = body;
 
         const { data, error } = await admin
             .from('coupons')
@@ -25,7 +25,8 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
                 min_order_amount: min_order_amount || 0,
                 max_discount_amount: max_discount_amount || null,
                 is_active,
-                expires_at: expires_at || null
+                expires_at: expires_at || null,
+                user_limit: user_limit || null
             })
             .eq('id', id)
             .select()
