@@ -251,7 +251,7 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
             />
 
             {/* Breadcrumb */}
-            <div style={{ background: '#f5f0e8', borderBottom: '1px solid #f0ece4' }}>
+            <div style={{ background: 'transparent' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0.75rem 1.5rem' }}>
                     <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#9e9eb8' }}>
                         <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
