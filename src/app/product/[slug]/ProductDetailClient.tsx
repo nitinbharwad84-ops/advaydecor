@@ -403,42 +403,44 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                                 </m.button>
                             </div>
 
-                            <div style={{ marginBottom: '2rem', display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-                                {/* Thumbnails relocated here - 50% width */}
-                                <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                                    {currentImages.map((img, index) => (
-                                        <button
-                                            key={img.id}
-                                            onClick={() => setActiveImageIndex(index)}
-                                            style={{
-                                                position: 'relative',
-                                                width: 'calc(33.333% - 0.5rem)', // Show 3 per row in their 50% space
-                                                aspectRatio: '1/1',
-                                                borderRadius: '0.75rem',
-                                                overflow: 'hidden',
-                                                border: activeImageIndex === index ? '2px solid #00b4d8' : '2px solid #f0ece4',
-                                                transition: 'all 0.2s',
-                                                cursor: 'pointer',
-                                                background: 'transparent',
-                                                padding: 0,
-                                                minWidth: '50px'
-                                            }}
-                                        >
-                                            <img
-                                                src={img.image_url}
-                                                alt={`View ${index + 1}`}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
-                                
-                                {/* Pincode Checker - 50% width */}
-                                <div style={{ flex: 1 }}>
-                                    <PincodeChecker />
-                                </div>
-                            </div>
                         </m.div>
+                    </div>
+
+                    {/* Thumbnails + Pincode Checker - Full width row */}
+                    <div className="flex flex-col md:flex-row gap-8 items-start w-full" style={{ marginTop: '2rem' }}>
+                        {/* Thumbnails */}
+                        <div className="flex-1 w-full flex flex-wrap gap-3">
+                            {currentImages.map((img, index) => (
+                                <button
+                                    key={img.id}
+                                    onClick={() => setActiveImageIndex(index)}
+                                    style={{
+                                        position: 'relative',
+                                        width: 'calc(25% - 0.6rem)',
+                                        aspectRatio: '1/1',
+                                        borderRadius: '0.75rem',
+                                        overflow: 'hidden',
+                                        border: activeImageIndex === index ? '2px solid #00b4d8' : '2px solid #f0ece4',
+                                        transition: 'all 0.2s',
+                                        cursor: 'pointer',
+                                        background: 'transparent',
+                                        padding: 0,
+                                        minWidth: '60px'
+                                    }}
+                                >
+                                    <img
+                                        src={img.image_url}
+                                        alt={`View ${index + 1}`}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                        
+                        {/* Pincode Checker */}
+                        <div className="flex-1 w-full">
+                            <PincodeChecker />
+                        </div>
                     </div>
 
                     {/* Product Promises (Full Width) */}
