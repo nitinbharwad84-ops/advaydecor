@@ -27,6 +27,7 @@ export default function SeoSettingsPage() {
     const [gtagId, setGtagId] = useState('');
     const [metaPixelId, setMetaPixelId] = useState('');
     const [googleVerification, setGoogleVerification] = useState('');
+    const [gtmId, setGtmId] = useState('');
 
     useEffect(() => {
         fetch('/api/seo/settings')
@@ -37,6 +38,7 @@ export default function SeoSettingsPage() {
                     setGtagId(data.google_tag_id || '');
                     setMetaPixelId(data.meta_pixel_id || '');
                     setGoogleVerification(data.google_verification || '');
+                    setGtmId(data.google_tag_manager_id || '');
                 }
                 setLoading(false);
             })
@@ -54,6 +56,7 @@ export default function SeoSettingsPage() {
                     google_tag_id: gtagId,
                     meta_pixel_id: metaPixelId,
                     google_verification: googleVerification,
+                    google_tag_manager_id: gtmId,
                 }),
             });
             if (res.ok) {
@@ -128,6 +131,10 @@ export default function SeoSettingsPage() {
                         <div>
                             <label style={labelStyle}>Meta (Facebook) Pixel ID</label>
                             <input type="text" value={metaPixelId} onChange={(e) => setMetaPixelId(e.target.value)} style={inputStyle} placeholder="XXXXXXXXXXXXXXXX" />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Google Tag Manager ID</label>
+                            <input type="text" value={gtmId} onChange={(e) => setGtmId(e.target.value)} style={inputStyle} placeholder="GTM-XXXXXXX" />
                         </div>
                     </div>
                 </motion.div>
