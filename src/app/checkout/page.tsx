@@ -38,7 +38,8 @@ export default function CheckoutPage() {
     const { user, isAuthenticated } = useUserAuthStore();
     const [step, setStep] = useState<Step>('shipping');
     const [mounted, setMounted] = useState(false);
-    const [shippingFee] = useState(50);
+    const [shippingFee, setShippingFee] = useState(50);
+    const [freeShippingThreshold, setFreeShippingThreshold] = useState(999);
     const [address, setAddress] = useState<ShippingAddress>({
         full_name: '',
         phone: '',
@@ -109,6 +110,14 @@ export default function CheckoutPage() {
                         razorpay_emi: config.razorpay_emi === 'true',
                     };
                     setPaymentSettings(ps);
+                    
+                    if (config.global_shipping_fee) {
+                        setShippingFee(Number(config.global_shipping_fee));
+                    }
+                    if (config.free_shipping_threshold) {
+                        setFreeShippingThreshold(Number(config.free_shipping_threshold));
+                    }
+
                     // Auto-select the first available payment method
                     if (!ps.cod_enabled && ps.razorpay_enabled) {
                         setPaymentMethod('Razorpay');
@@ -173,7 +182,9 @@ export default function CheckoutPage() {
 
     const subtotal = getSubtotal();
     const discount = appliedCoupon ? appliedCoupon.discount_amount : 0;
-    const total = Math.max(0, subtotal - discount) + shippingFee;
+    const isFreeShipping = subtotal >= freeShippingThreshold;
+    const effectiveShippingFee = isFreeShipping ? 0 : shippingFee;
+    const total = Math.max(0, subtotal - discount) + effectiveShippingFee;
 
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) return;
@@ -260,7 +271,7 @@ export default function CheckoutPage() {
                 shipping_address: address,
                 items: orderItems,
                 payment_method: pm,
-                shipping_fee: shippingFee,
+                shipping_fee: effectiveShippingFee,
                 coupon_code: appliedCoupon?.code || null,
                 discount_amount: appliedCoupon?.discount_amount || 0,
                 ...(razorpayPaymentId ? { razorpay_payment_id: razorpayPaymentId } : {}),
@@ -324,7 +335,7 @@ export default function CheckoutPage() {
                         shipping_address: address,
                         items: orderItems,
                         payment_method: 'Razorpay',
-                        shipping_fee: shippingFee,
+                        shipping_fee: effectiveShippingFee,
                         coupon_code: appliedCoupon?.code || null,
                         discount_amount: appliedCoupon?.discount_amount || 0,
                     }),
@@ -993,7 +1004,9 @@ export default function CheckoutPage() {
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
                                         <span style={{ color: '#64648b' }}>Shipping</span>
-                                        <span style={{ fontWeight: 500 }}>{formatCurrency(shippingFee)}</span>
+                                        <span style={{ fontWeight: 500, color: isFreeShipping ? '#16a34a' : 'inherit' }}>
+                                            {isFreeShipping ? 'Free' : formatCurrency(shippingFee)}
+                                        </span>
                                     </div>
                                     {appliedCoupon && (
                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#16a34a' }}>
