@@ -6,10 +6,27 @@ import type { ProductImage } from '@/types';
 
 interface ImageGalleryProps {
     images: ProductImage[];
+    activeIndex?: number;
+    onIndexChange?: (index: number) => void;
+    showThumbnails?: boolean;
 }
 
-export default function ImageGallery({ images }: ImageGalleryProps) {
-    const [selectedIndex, setSelectedIndex] = useState(0);
+export default function ImageGallery({
+    images,
+    activeIndex,
+    onIndexChange,
+    showThumbnails = true
+}: ImageGalleryProps) {
+    const [internalIndex, setInternalIndex] = useState(0);
+
+    const selectedIndex = activeIndex !== undefined ? activeIndex : internalIndex;
+    const setSelectedIndex = (index: number) => {
+        if (onIndexChange) {
+            onIndexChange(index);
+        } else {
+            setInternalIndex(index);
+        }
+    };
 
     const displayImages = images.length > 0
         ? images
@@ -20,26 +37,28 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
     return (
         <div className="flex flex-col-reverse md:flex-row gap-4">
             {/* Thumbnails */}
-            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:max-h-[500px] pb-2 md:pb-0 md:pr-2">
-                {displayImages.map((img, index) => (
-                    <button
-                        key={img.id}
-                        onClick={() => setSelectedIndex(index)}
-                        className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${selectedIndex === index
-                                ? 'border-cyan shadow-md shadow-cyan/20'
-                                : 'border-border-light hover:border-navy/20'
-                            }`}
-                    >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={img.image_url}
-                            alt={`View ${index + 1}`}
-                            className="object-cover"
-                            style={{ position: 'absolute', width: '100%', height: '100%', inset: 0, objectFit: 'cover' }}
-                        />
-                    </button>
-                ))}
-            </div>
+            {showThumbnails && (
+                <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:max-h-[500px] pb-2 md:pb-0 md:pr-2">
+                    {displayImages.map((img, index) => (
+                        <button
+                            key={img.id}
+                            onClick={() => setSelectedIndex(index)}
+                            className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${selectedIndex === index
+                                    ? 'border-cyan shadow-md shadow-cyan/20'
+                                    : 'border-border-light hover:border-navy/20'
+                                }`}
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={img.image_url}
+                                alt={`View ${index + 1}`}
+                                className="object-cover"
+                                style={{ position: 'absolute', width: '100%', height: '100%', inset: 0, objectFit: 'cover' }}
+                            />
+                        </button>
+                    ))}
+                </div>
+            )}
  
             {/* Main Image */}
             <div className="flex-1 relative aspect-square rounded-2xl overflow-hidden bg-cream-dark">

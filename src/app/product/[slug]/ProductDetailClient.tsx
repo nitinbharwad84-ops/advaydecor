@@ -36,6 +36,8 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+
     // Reviews State
     const [reviews, setReviews] = useState<Review[]>([]);
     const [avgRating, setAvgRating] = useState(product.avg_rating || 0);
@@ -68,6 +70,11 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
             .then(data => setIsWishlisted(data.isWishlisted))
             .catch(err => console.error('Failed to check wishlist status', err));
     }, [product.id, isAuthenticated]);
+
+    // Reset index when variant changes
+    useEffect(() => {
+        setActiveImageIndex(0);
+    }, [selectedVariant]);
 
     // Fetch Reviews
     useEffect(() => {
@@ -273,7 +280,12 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <ImageGallery images={currentImages} />
+                            <ImageGallery 
+                                images={currentImages} 
+                                activeIndex={activeImageIndex}
+                                onIndexChange={setActiveImageIndex}
+                                showThumbnails={false}
+                            />
                         </m.div>
 
                         {/* Right: Product Info */}
@@ -391,8 +403,38 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                                 </m.button>
                             </div>
 
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <PincodeChecker />
+                            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+                                {/* Thumbnails relocated here */}
+                                <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
+                                    {currentImages.map((img, index) => (
+                                        <button
+                                            key={img.id}
+                                            onClick={() => setActiveImageIndex(index)}
+                                            style={{
+                                                position: 'relative',
+                                                width: '56px',
+                                                height: '56px',
+                                                borderRadius: '0.75rem',
+                                                overflow: 'hidden',
+                                                border: activeImageIndex === index ? '2px solid #00b4d8' : '2px solid #f0ece4',
+                                                transition: 'all 0.2s',
+                                                cursor: 'pointer',
+                                                background: 'transparent',
+                                                padding: 0
+                                            }}
+                                        >
+                                            <img
+                                                src={img.image_url}
+                                                alt={`View ${index + 1}`}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                                
+                                <div style={{ flex: 1 }}>
+                                    <PincodeChecker />
+                                </div>
                             </div>
                         </m.div>
                     </div>
