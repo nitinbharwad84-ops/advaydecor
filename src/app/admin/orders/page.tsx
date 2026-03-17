@@ -12,9 +12,11 @@ const statusColors: Record<string, { bg: string; text: string }> = {
     Delivered: { bg: 'rgba(34, 197, 94, 0.1)', text: '#16a34a' },
     Cancelled: { bg: 'rgba(239, 68, 68, 0.1)', text: '#dc2626' },
     Returned: { bg: 'rgba(107, 114, 128, 0.1)', text: '#6b7280' },
+    'Cancellation Requested': { bg: 'rgba(245, 158, 11, 0.12)', text: '#b45309' },
+    'Return Requested': { bg: 'rgba(245, 158, 11, 0.12)', text: '#b45309' },
 };
 
-const statusOptions = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+const statusOptions = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancellation Requested', 'Cancelled', 'Return Requested', 'Returned'];
 
 interface OrderData {
     id: string;
