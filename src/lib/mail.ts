@@ -18,26 +18,18 @@ interface SendEmailParams {
  * Universal email sender with support for multiple SMTP profiles.
  */
 export async function sendEmail({ to, subject, html, fromProfile = 'default' }: SendEmailParams) {
-    let user = process.env.SMTP_USER;
-    let pass = process.env.SMTP_PASS;
+    const user = process.env.SMTP_USER;
+    const pass = process.env.SMTP_PASS;
     let fromName = 'AdvayDecor';
 
-    // Switch credentials based on profile
-    if (fromProfile === 'order' && process.env.SMTP_ORDER_USER) {
-        user = process.env.SMTP_ORDER_USER;
-        pass = process.env.SMTP_ORDER_PASS;
+    // Switch name based on profile if needed
+    if (fromProfile === 'order') {
         fromName = 'AdvayDecor Orders';
-    } else if (fromProfile === 'welcome' && process.env.SMTP_WELCOME_USER) {
-        user = process.env.SMTP_WELCOME_USER;
-        pass = process.env.SMTP_WELCOME_PASS;
-        fromName = 'AdvayDecor hello';
-    } else if (fromProfile === 'otp' && process.env.SMTP_OTP_USER) {
-        user = process.env.SMTP_OTP_USER;
-        pass = process.env.SMTP_OTP_PASS;
+    } else if (fromProfile === 'welcome') {
+        fromName = 'AdvayDecor';
+    } else if (fromProfile === 'otp') {
         fromName = 'AdvayDecor Security';
-    } else if (fromProfile === 'support' && process.env.SMTP_SUPPORT_USER) {
-        user = process.env.SMTP_SUPPORT_USER;
-        pass = process.env.SMTP_SUPPORT_PASS;
+    } else if (fromProfile === 'support') {
         fromName = 'AdvayDecor Support';
     }
 

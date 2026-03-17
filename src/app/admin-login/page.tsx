@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase';
@@ -111,7 +111,7 @@ export default function AdminLoginPage() {
                 borderRadius: '50%', pointerEvents: 'none',
             }} />
 
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -119,7 +119,7 @@ export default function AdminLoginPage() {
             >
                 {/* Header */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <motion.div
+                    <m.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}
@@ -140,7 +140,7 @@ export default function AdminLoginPage() {
                             style={{ objectFit: 'contain' }}
                             priority
                         />
-                    </motion.div>
+                    </m.div>
 
                     <h1 className="font-[family-name:var(--font-display)]"
                         style={{ fontSize: '1.75rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
@@ -152,7 +152,7 @@ export default function AdminLoginPage() {
                 </div>
 
                 {/* Login Form — NO sign up */}
-                <motion.form
+                <m.form
                     onSubmit={handleSubmit}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -168,7 +168,7 @@ export default function AdminLoginPage() {
                 >
                     {/* Error */}
                     {error && (
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             style={{
@@ -179,7 +179,7 @@ export default function AdminLoginPage() {
                             }}
                         >
                             {error}
-                        </motion.div>
+                        </m.div>
                     )}
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -231,7 +231,7 @@ export default function AdminLoginPage() {
                     </div>
 
                     {/* Submit */}
-                    <motion.button
+                    <m.button
                         type="submit"
                         disabled={isLoading}
                         style={{
@@ -260,8 +260,8 @@ export default function AdminLoginPage() {
                                 <ArrowRight size={16} />
                             </>
                         )}
-                    </motion.button>
-                </motion.form>
+                    </m.button>
+                </m.form>
 
                 {/* Back to website */}
                 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
@@ -269,7 +269,7 @@ export default function AdminLoginPage() {
                         ← Back to AdvayDecor
                     </Link>
                 </div>
-            </motion.div>
+            </m.div>
 
             <style jsx global>{`
                 @keyframes spin { to { transform: rotate(360deg); } }

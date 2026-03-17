@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
@@ -23,7 +23,7 @@ export default function CartDrawer() {
             {isCartOpen && (
                 <div style={{ position: 'fixed', inset: 0, zIndex: 60 }}>
                     {/* Backdrop */}
-                    <motion.div
+                    <m.div
                         style={{
                             position: 'absolute', inset: 0,
                             background: 'rgba(10,10,35,0.5)',
@@ -36,7 +36,7 @@ export default function CartDrawer() {
                     />
 
                     {/* Drawer — full width on tiny screens, max-w on larger */}
-                    <motion.div
+                    <m.div
                         style={{
                             position: 'absolute',
                             top: 0,
@@ -114,7 +114,7 @@ export default function CartDrawer() {
                                             const itemKey = `${item.product.id}-${item.variant?.id || 'base'}`;
 
                                             return (
-                                                <motion.div
+                                                <m.div
                                                     key={itemKey}
                                                     layout
                                                     initial={{ opacity: 0, y: 20 }}
@@ -201,7 +201,7 @@ export default function CartDrawer() {
                                                             </button>
                                                         </div>
                                                     </div>
-                                                </motion.div>
+                                                </m.div>
                                             );
                                         })}
                                     </AnimatePresence>
@@ -250,7 +250,7 @@ export default function CartDrawer() {
                                 </button>
                             </div>
                         )}
-                    </motion.div>
+                    </m.div>
                 </div>
             )}
         </AnimatePresence>

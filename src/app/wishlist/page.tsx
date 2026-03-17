@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Heart, Trash2, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react';
 import { useUserAuthStore } from '@/lib/auth-store';
 import { useCartStore } from '@/lib/store';
@@ -140,29 +140,29 @@ export default function WishlistPage() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                    <motion.span
+                    <m.span
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         style={{ color: '#00b4d8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}
                     >
                         Your Favorites
-                    </motion.span>
-                    <motion.h1
+                    </m.span>
+                    <m.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', fontWeight: 700, color: '#fff', marginTop: '0.75rem', marginBottom: '1rem' }}
                     >
                         Wishlist
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}
                     >
                         Items you&apos;ve saved for later. Add them to your cart when you&apos;re ready.
-                    </motion.p>
+                    </m.p>
                 </div>
             </section>
 
@@ -178,7 +178,7 @@ export default function WishlistPage() {
 
                     {/* Empty State */}
                     {!loading && items.length === 0 && (
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             style={{
@@ -206,7 +206,7 @@ export default function WishlistPage() {
                                 <ShoppingBag size={18} />
                                 Browse Shop
                             </Link>
-                        </motion.div>
+                        </m.div>
                     )}
 
                     {/* Items Grid */}
@@ -240,7 +240,7 @@ export default function WishlistPage() {
                                         const image = product.images?.[0]?.image_url || '';
 
                                         return (
-                                            <motion.div
+                                            <m.div
                                                 key={item.id}
                                                 layout
                                                 initial={{ opacity: 0, y: 20 }}
@@ -325,7 +325,7 @@ export default function WishlistPage() {
                                                         </button>
                                                     </div>
                                                 </div>
-                                            </motion.div>
+                                            </m.div>
                                         );
                                     })}
                                 </AnimatePresence>

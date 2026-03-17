@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, User, LogIn, UserPlus, ShieldCheck, ChevronLeft, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase';
@@ -153,7 +153,7 @@ export default function LoginPage() {
             <Suspense fallback={null}>
                 <RedirectHandler onComplete={setRedirectUrl} />
             </Suspense>
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -230,7 +230,7 @@ export default function LoginPage() {
                 )}
 
                 {/* Form */}
-                <motion.form
+                <m.form
                     key={mode}
                     initial={{ opacity: 0, x: mode === 'login' ? -10 : 10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -354,7 +354,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <motion.button
+                    <m.button
                         type="submit"
                         disabled={isLoading}
                         style={{
@@ -387,8 +387,8 @@ export default function LoginPage() {
                                 <ArrowRight size={16} />
                             </>
                         )}
-                    </motion.button>
-                </motion.form>
+                    </m.button>
+                </m.form>
 
                 {/* Admin link */}
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8rem', color: '#9e9eb8' }}>
@@ -397,7 +397,7 @@ export default function LoginPage() {
                         Login here
                     </Link>
                 </p>
-            </motion.div>
+            </m.div>
         </div>
     );
 }

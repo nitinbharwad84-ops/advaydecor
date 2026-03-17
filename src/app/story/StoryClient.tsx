@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Heart, Star, Palette, Sparkles } from 'lucide-react';
 
 export default function StoryClient() {
@@ -25,14 +25,14 @@ export default function StoryClient() {
                 }} className="hidden lg:block" />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                    <motion.span
+                    <m.span
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         style={{ color: '#00b4d8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}
                     >
                         Our Journey
-                    </motion.span>
-                    <motion.h1
+                    </m.span>
+                    <m.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -40,15 +40,15 @@ export default function StoryClient() {
                         style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 700, color: '#fff', marginTop: '0.75rem', marginBottom: '1.25rem' }}
                     >
                         The AdvayDecor Story
-                    </motion.h1>
-                    <motion.p
+                        </m.h1>
+                    <m.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '600px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.6 }}
                     >
                         Born from a passion for artisanal craftsmanship and a love for beautiful spaces.
-                    </motion.p>
+                    </m.p>
                 </div>
             </section>
 
@@ -56,7 +56,7 @@ export default function StoryClient() {
             <section style={{ padding: '5rem 0' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
                     <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -77,7 +77,7 @@ export default function StoryClient() {
                                     content: 'We dont just sell cushions and decor \u2014 we help you create spaces that tell your story. Spaces that welcome you home after a long day, that make your guests feel the warmth of your personality, and that bring a smile to your face every morning.',
                                 },
                             ].map((section, index) => (
-                                <motion.div
+                                <m.div
                                     key={section.title}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -99,9 +99,9 @@ export default function StoryClient() {
                                     <p style={{ fontSize: '1rem', color: '#64648b', lineHeight: 1.8 }}>
                                         {section.content}
                                     </p>
-                                </motion.div>
+                                </m.div>
                             ))}
-                        </motion.div>
+                        </m.div>
                     </div>
                 </div>
             </section>
@@ -109,7 +109,7 @@ export default function StoryClient() {
             {/* Values Grid */}
             <section style={{ padding: '5rem 0', background: '#ffffff' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -121,7 +121,7 @@ export default function StoryClient() {
                         >
                             Our Values
                         </h2>
-                    </motion.div>
+                    </m.div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem', maxWidth: '960px', margin: '0 auto' }}>
                         {[
@@ -130,7 +130,7 @@ export default function StoryClient() {
                             { icon: Palette, title: 'Creativity', desc: 'Unique designs that break the monotony of mass production.', color: '#00b4d8' },
                             { icon: Sparkles, title: 'Joy', desc: 'Creating moments of delight in everyday spaces.', color: '#8b5cf6' },
                         ].map((value, index) => (
-                            <motion.div
+                            <m.div
                                 key={value.title}
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -161,7 +161,7 @@ export default function StoryClient() {
                                 </div>
                                 <h3 style={{ fontWeight: 600, color: '#0a0a23', marginBottom: '0.5rem' }}>{value.title}</h3>
                                 <p style={{ fontSize: '0.8rem', color: '#9e9eb8', lineHeight: 1.5 }}>{value.desc}</p>
-                            </motion.div>
+                            </m.div>
                         ))}
                     </div>
                 </div>
@@ -173,7 +173,7 @@ export default function StoryClient() {
                 background: 'linear-gradient(135deg, #0a0a23, #1a1a3e)',
             }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', textAlign: 'center' }}>
-                    <motion.blockquote
+                    <m.blockquote
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
@@ -188,7 +188,7 @@ export default function StoryClient() {
                         }}
                     >
                         &ldquo;Your space is a canvas. Let it tell the world who you are.&rdquo;
-                    </motion.blockquote>
+                    </m.blockquote>
                     <p style={{ color: '#00b4d8', marginTop: '1.5rem', fontWeight: 600, fontSize: '0.875rem' }}>2014 Team AdvayDecor</p>
                 </div>
             </section>
