@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -200,7 +200,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                 <AnimatePresence>
                     {isSidebarOpen && (
                         <>
-                            <motion.div
+                            <m.div
                                 style={{
                                     position: 'fixed', inset: 0,
                                     background: 'rgba(10,10,35,0.5)', backdropFilter: 'blur(4px)',
@@ -212,7 +212,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                                 exit={{ opacity: 0 }}
                                 onClick={() => setIsSidebarOpen(false)}
                             />
-                            <motion.aside
+                            <m.aside
                                 className="lg:hidden"
                                 style={{
                                     position: 'fixed', left: 0, top: 0, bottom: 0,
@@ -294,7 +294,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                                         Logout
                                     </button>
                                 </div>
-                            </motion.aside>
+                            </m.aside>
                         </>
                     )}
                 </AnimatePresence>

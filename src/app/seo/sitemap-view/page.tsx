@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Map, ExternalLink, Loader2, Globe, Link2 } from 'lucide-react';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.advaydecor.in';
@@ -79,7 +79,7 @@ export default function SeoSitemapPage() {
                     <Loader2 size={28} style={{ animation: 'spin 1s linear infinite', color: '#8b5cf6' }} />
                 </div>
             ) : (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
                     <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                             <thead>
@@ -141,7 +141,7 @@ export default function SeoSitemapPage() {
                             </p>
                         </div>
                     )}
-                </motion.div>
+                </m.div>
             )}
 
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Search, Reply, X, CheckCircle, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase';
@@ -176,7 +176,7 @@ export default function AdminMessagesPage() {
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {filteredMessages.map((msg) => (
-                                <motion.div
+                                <m.div
                                     key={msg.id}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -212,7 +212,7 @@ export default function AdminMessagesPage() {
                                             {msg.status.toUpperCase()}
                                         </span>
                                     </div>
-                                </motion.div>
+                                </m.div>
                             ))}
                         </div>
                     )}
@@ -221,7 +221,7 @@ export default function AdminMessagesPage() {
                 {/* Right Panel: Selected Message Details */}
                 <AnimatePresence>
                     {selectedMessage && (
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
@@ -301,7 +301,7 @@ export default function AdminMessagesPage() {
                                     </form>
                                 )}
                             </div>
-                        </motion.div>
+                        </m.div>
                     )}
                 </AnimatePresence>
             </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import {
     ArrowLeft, Package, MapPin, CreditCard, Clock, User, Mail, Phone,
     Hash, Truck, CheckCircle, AlertCircle, RotateCcw, Loader2, ShoppingBag, Tag, X, HelpCircle
@@ -117,7 +117,7 @@ export default function OrderDetailPage() {
             <div style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem' }}>
 
                 {/* Back Button + Order ID Header */}
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     style={{ marginBottom: '2rem' }}
@@ -148,14 +148,14 @@ export default function OrderDetailPage() {
                             {order.status}
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: '1.5rem' }}>
                     {/* Left Column (2/3) */}
                     <div className="lg:col-span-2" style={{ display: 'flex', flexDirection: 'column' }}>
 
                         {/* Order Items */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
@@ -216,10 +216,10 @@ export default function OrderDetailPage() {
                                     <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#00b4d8' }}>{formatCurrency(order.total_amount)}</span>
                                 </div>
                             </div>
-                        </motion.div>
+                        </m.div>
 
                         {/* Shipping Address */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
@@ -239,14 +239,14 @@ export default function OrderDetailPage() {
                                     <Phone size={14} /> {order.shipping_address.phone}
                                 </p>
                             </div>
-                        </motion.div>
+                        </m.div>
                     </div>
 
                     {/* Right Column (1/3) */}
                     <div className="lg:col-span-1" style={{ display: 'flex', flexDirection: 'column' }}>
 
                         {/* Customer Info */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.15 }}
@@ -269,10 +269,10 @@ export default function OrderDetailPage() {
                                     <p style={valueStyle}>{customerPhone}</p>
                                 </div>
                             </div>
-                        </motion.div>
+                        </m.div>
 
                         {/* Payment Info */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.25 }}
@@ -311,10 +311,10 @@ export default function OrderDetailPage() {
                                     </p>
                                 </div>
                             </div>
-                        </motion.div>
+                        </m.div>
 
                         {/* Quick Actions */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
@@ -406,7 +406,7 @@ export default function OrderDetailPage() {
                                     </div>
                                 );
                             })()}
-                        </motion.div>
+                        </m.div>
                     </div>
                 </div>
             </div>

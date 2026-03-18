@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Fragment } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Search, ChevronDown, RotateCcw, CheckCircle2, Ban, PackageCheck, PackageX } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -161,7 +161,7 @@ export default function AdminReturnsPage() {
             </div>
 
             {/* Table */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 style={{ borderRadius: '1rem', background: '#fff', border: '1px solid #f0ece4', overflow: 'hidden' }}
             >
                 <div style={{ overflowX: 'auto' }}>
@@ -283,7 +283,7 @@ export default function AdminReturnsPage() {
                         <p style={{ color: '#9e9eb8', fontSize: '0.9rem' }}>No return requests found</p>
                     </div>
                 )}
-            </motion.div>
+            </m.div>
         </div>
     );
 }

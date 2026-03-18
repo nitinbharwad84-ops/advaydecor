@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Package, ShoppingCart, IndianRupee, Clock, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useAdminAuthStore } from '@/lib/auth-store';
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
                 {stats.map((stat, index) => {
                     const Icon = statIcons[index];
                     return (
-                        <motion.div
+                        <m.div
                             key={stat.title}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -129,13 +129,13 @@ export default function AdminDashboard() {
                                     )}
                                 </div>
                             </Link>
-                        </motion.div>
+                        </m.div>
                     );
                 })}
             </div>
 
             {/* Recent Orders */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
                         </tbody>
                     </table>
                 </div>
-            </motion.div>
+            </m.div>
         </div>
     );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, Trash2, ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
@@ -29,17 +29,17 @@ export default function CartPage() {
     return (
         <div style={{ paddingTop: 'var(--nav-height, 80px)', minHeight: '100vh', background: '#fdfbf7' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
-                <motion.h1
+                <m.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="font-[family-name:var(--font-display)]"
                     style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#0a0a23', marginBottom: '2rem' }}
                 >
                     Shopping Bag
-                </motion.h1>
+                </m.h1>
 
                 {items.length === 0 ? (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         style={{ textAlign: 'center', padding: '4rem 1rem' }}
@@ -65,7 +65,7 @@ export default function CartPage() {
                             <ArrowLeft size={16} />
                             Continue Shopping
                         </Link>
-                    </motion.div>
+                    </m.div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: '2rem' }}>
                         {/* Items List */}
@@ -76,7 +76,7 @@ export default function CartPage() {
                                     const itemKey = `${item.product.id}-${item.variant?.id || 'base'}`;
 
                                     return (
-                                        <motion.div
+                                        <m.div
                                             key={itemKey}
                                             layout
                                             initial={{ opacity: 0, y: 20 }}
@@ -171,7 +171,7 @@ export default function CartPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </motion.div>
+                                        </m.div>
                                     );
                                 })}
                             </AnimatePresence>
@@ -179,7 +179,7 @@ export default function CartPage() {
 
                         {/* Order Summary */}
                         <div className="lg:col-span-1">
-                            <motion.div
+                            <m.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
@@ -232,7 +232,7 @@ export default function CartPage() {
                                     <ArrowLeft size={14} />
                                     Continue Shopping
                                 </Link>
-                            </motion.div>
+                            </m.div>
                         </div>
                     </div>
                 )}

@@ -23,7 +23,7 @@ import "./globals.css";
 import ConditionalNavbar from "@/components/layout/ConditionalNavbar";
 import ConditionalFooter from "@/components/layout/ConditionalFooter";
 import { Toaster } from "react-hot-toast";
-import { LazyMotion, domAnimation } from "framer-motion";
+import { FramerProvider } from "@/components/providers/FramerProvider";
 
 import Script from 'next/script';
 
@@ -208,13 +208,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
           `}
         </Script>
-        <LazyMotion features={domAnimation} strict>
+        <FramerProvider>
           <ConditionalNavbar />
           <main className="flex-1">
             {children}
           </main>
           <ConditionalFooter />
-        </LazyMotion>
+        </FramerProvider>
       </body>
     </html>
   );

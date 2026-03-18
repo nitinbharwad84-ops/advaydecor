@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Search, Plus, PenLine, Trash2, Tag, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -242,7 +242,7 @@ export default function AdminCategories() {
             {/* Add/Edit Modal */}
             <AnimatePresence>
                 {isModalOpen && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -252,7 +252,7 @@ export default function AdminCategories() {
                             zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem'
                         }}
                     >
-                        <motion.div
+                        <m.div
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
@@ -326,8 +326,8 @@ export default function AdminCategories() {
                                     </button>
                                 </div>
                             </form>
-                        </motion.div>
-                    </motion.div>
+                        </m.div>
+                    </m.div>
                 )}
             </AnimatePresence>
         </div>

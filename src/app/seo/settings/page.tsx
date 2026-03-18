@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Settings, Save, Loader2, Globe, BarChart3, Hash } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -92,7 +92,7 @@ export default function SeoSettingsPage() {
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0a1a0a' }}>SEO Settings</h1>
                     <p style={{ fontSize: '0.875rem', color: '#6b7c6b', marginTop: '0.25rem' }}>Configure tracking IDs and verification tags.</p>
                 </div>
-                <motion.button
+                <m.button
                     onClick={handleSave}
                     disabled={isSaving}
                     style={{
@@ -108,11 +108,11 @@ export default function SeoSettingsPage() {
                 >
                     {isSaving ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Save size={16} />}
                     {isSaving ? 'Saving...' : 'Save Settings'}
-                </motion.button>
+                </m.button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #f59e0b20, #f59e0b08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <BarChart3 size={18} style={{ color: '#f59e0b' }} />
@@ -137,9 +137,9 @@ export default function SeoSettingsPage() {
                             <input type="text" value={gtmId} onChange={(e) => setGtmId(e.target.value)} style={inputStyle} placeholder="GTM-XXXXXXX" />
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #22c55e20, #22c55e08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Globe size={18} style={{ color: '#22c55e' }} />
@@ -151,7 +151,7 @@ export default function SeoSettingsPage() {
                         <input type="text" value={googleVerification} onChange={(e) => setGoogleVerification(e.target.value)} style={inputStyle} placeholder="Verification meta tag content" />
                         <p style={{ fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.5rem' }}>This is the content value of your Google verification meta tag.</p>
                     </div>
-                </motion.div>
+                </m.div>
             </div>
 
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

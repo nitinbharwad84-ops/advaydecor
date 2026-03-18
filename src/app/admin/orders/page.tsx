@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Fragment } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Search, Eye, ChevronDown, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -163,7 +163,7 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Orders Table */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{ borderRadius: '1rem', background: '#ffffff', border: '1px solid #f0ece4', overflow: 'hidden' }}
@@ -366,7 +366,7 @@ export default function AdminOrdersPage() {
                         <p style={{ color: '#64648b' }}>No orders found</p>
                     </div>
                 )}
-            </motion.div>
+            </m.div>
 
             <style>{`
                 .admin-order-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; padding: 0.5rem; }

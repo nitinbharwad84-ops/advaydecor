@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Tag, Plus, Edit, Trash2, X, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -220,12 +220,12 @@ export default function AdminCouponsPage() {
             <AnimatePresence>
                 {isModalOpen && (
                     <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             style={{ position: 'absolute', inset: 0, background: 'rgba(10,10,35,0.5)', backdropFilter: 'blur(4px)' }}
                             onClick={() => setIsModalOpen(false)}
                         />
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }}
                             style={{ background: '#fff', borderRadius: '1.25rem', padding: '2rem', width: '100%', maxWidth: '500px', position: 'relative', zIndex: 101, maxHeight: '90vh', overflowY: 'auto' }}
                         >
@@ -330,7 +330,7 @@ export default function AdminCouponsPage() {
                                     {editingCoupon ? 'Update Coupon' : 'Create Coupon'}
                                 </button>
                             </form>
-                        </motion.div>
+                        </m.div>
                     </div>
                 )}
             </AnimatePresence>

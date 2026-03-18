@@ -1,31 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Home, ShoppingBag, Search, Sparkles } from 'lucide-react';
 
 export default function NotFound() {
     return (
         <div style={{ minHeight: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5rem 1rem', backgroundColor: '#fdfbf7', position: 'relative', overflow: 'hidden', width: '100%' }}>
             {/* Background Decorative Elements */}
-            <motion.div 
+            <m.div 
                 style={{ position: 'absolute', top: '15%', left: '10%', opacity: 0.04, pointerEvents: 'none' }}
                 animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
                 <Sparkles size={120} />
-            </motion.div>
-            <motion.div 
+            </m.div>
+            <m.div 
                 style={{ position: 'absolute', bottom: '15%', right: '10%', opacity: 0.04, pointerEvents: 'none' }}
                 animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             >
                 <ShoppingBag size={150} />
-            </motion.div>
+            </m.div>
 
             <div style={{ maxWidth: '640px', width: '100%', textAlign: 'center', position: 'relative', zIndex: 10 }}>
                 {/* 404 Visual */}
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -36,18 +36,18 @@ export default function NotFound() {
                             404
                         </span>
                         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <motion.div
+                            <m.div
                                 animate={{ rotate: [0, 10, -10, 0] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                             >
                                 <Search className="w-20 h-20 md:w-28 md:h-28" strokeWidth={1.5} color="#00b4d8" style={{ opacity: 0.85 }} />
-                            </motion.div>
+                            </m.div>
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Text Content */}
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.6 }}
@@ -60,10 +60,10 @@ export default function NotFound() {
                         The piece of beauty you are looking for seems to have vanished. 
                         Let's find your way back to creating a home you love.
                     </p>
-                </motion.div>
+                </m.div>
 
                 {/* Buttons */}
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.6 }}
@@ -80,7 +80,7 @@ export default function NotFound() {
                             boxShadow: '0 8px 32px rgba(10,10,35,0.15)', minWidth: '200px'
                         }}
                     >
-                        <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                        <m.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                         <Home size={18} />
                         <span>Back to Home</span>
                     </Link>
@@ -98,10 +98,10 @@ export default function NotFound() {
                         <ShoppingBag size={18} />
                         <span>Explore Shop</span>
                     </Link>
-                </motion.div>
+                </m.div>
 
                 {/* Footer Notes */}
-                <motion.div
+                <m.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8, duration: 1 }}
@@ -118,7 +118,7 @@ export default function NotFound() {
                             help@advaydecor.in
                         </a>
                     </p>
-                </motion.div>
+                </m.div>
             </div>
         </div>
     );

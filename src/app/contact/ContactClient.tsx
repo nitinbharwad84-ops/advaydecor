@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useUserAuthStore } from '@/lib/auth-store';
@@ -56,14 +56,14 @@ export default function ContactClient() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                    <motion.span
+                    <m.span
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         style={{ color: '#00b4d8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}
                     >
                         Get in Touch
-                    </motion.span>
-                    <motion.h1
+                    </m.span>
+                    <m.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -71,15 +71,15 @@ export default function ContactClient() {
                         style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 700, color: '#fff', marginTop: '0.75rem', marginBottom: '1rem' }}
                     >
                         Contact Us
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}
                     >
                         We&apos;d love to hear from you. Drop us a message and we&apos;ll respond within 24 hours.
-                    </motion.p>
+                    </m.p>
                 </div>
             </section>
 
@@ -88,7 +88,7 @@ export default function ContactClient() {
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
                     <div className="grid grid-cols-1 lg:grid-cols-5" style={{ gap: '3rem' }}>
                         {/* Left - Contact Info */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2 }}
@@ -126,10 +126,10 @@ export default function ContactClient() {
                                     </div>
                                 ))}
                             </div>
-                        </motion.div>
+                        </m.div>
 
                         {/* Right - Contact Form */}
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3 }}
@@ -241,7 +241,7 @@ export default function ContactClient() {
                                     />
                                 </div>
 
-                                <motion.button
+                                <m.button
                                     type="submit"
                                     disabled={isLoading}
                                     className="group"
@@ -274,9 +274,9 @@ export default function ContactClient() {
                                             <Send size={16} />
                                         </>
                                     )}
-                                </motion.button>
+                                </m.button>
                             </form>
-                        </motion.div>
+                        </m.div>
                     </div>
                 </div>
             </section>

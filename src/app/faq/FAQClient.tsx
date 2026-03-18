@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Send, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useUserAuthStore } from '@/lib/auth-store';
@@ -78,14 +78,14 @@ export default function FAQClient() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                    <motion.span
+                    <m.span
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         style={{ color: '#00b4d8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}
                     >
                         Learn More
-                    </motion.span>
-                    <motion.h1
+                    </m.span>
+                    <m.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -93,15 +93,15 @@ export default function FAQClient() {
                         style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 700, color: '#fff', marginTop: '0.75rem', marginBottom: '1rem' }}
                     >
                         Frequently Asked Questions
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}
                     >
                         Everything you need to know about our home decor products, orders, shipping, and returns.
-                    </motion.p>
+                    </m.p>
                 </div>
             </section>
 
@@ -138,17 +138,17 @@ export default function FAQClient() {
                                     <span style={{ fontSize: '1rem', fontWeight: 600, color: '#0a0a23' }}>
                                         {faq.question}
                                     </span>
-                                    <motion.div
+                                    <m.div
                                         animate={{ rotate: openIndex === index ? 180 : 0 }}
                                         transition={{ duration: 0.2 }}
                                     >
                                         <ChevronDown size={20} style={{ color: '#00b4d8' }} />
-                                    </motion.div>
+                                    </m.div>
                                 </button>
 
                                 <AnimatePresence>
                                     {openIndex === index && (
-                                        <motion.div
+                                        <m.div
                                             initial={{ height: 0, opacity: 0 }}
                                             animate={{ height: 'auto', opacity: 1 }}
                                             exit={{ height: 0, opacity: 0 }}
@@ -157,7 +157,7 @@ export default function FAQClient() {
                                             <div style={{ padding: '0 1.5rem 1.5rem', fontSize: '0.95rem', color: '#64748b', lineHeight: 1.7, borderTop: '1px solid #f9f8f6', paddingTop: '1rem' }}>
                                                 {faq.answer}
                                             </div>
-                                        </motion.div>
+                                        </m.div>
                                     )}
                                 </AnimatePresence>
                             </div>
@@ -250,7 +250,7 @@ export default function FAQClient() {
                                 />
                             </div>
 
-                            <motion.button
+                            <m.button
                                 type="submit"
                                 disabled={isLoading}
                                 style={{
@@ -264,7 +264,7 @@ export default function FAQClient() {
                             >
                                 {isLoading ? 'Submitting...' : 'Submit Question'}
                                 {!isLoading && <Send size={16} />}
-                            </motion.button>
+                            </m.button>
                         </form>
 
                     </div>

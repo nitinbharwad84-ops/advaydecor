@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { BarChart3, ExternalLink, CheckCircle, Globe } from 'lucide-react';
 
 const GA4_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
@@ -25,7 +25,7 @@ export default function SeoAnalyticsPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {/* Google Analytics 4 */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #f59e0b20, #f59e0b08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <BarChart3 size={18} style={{ color: '#f59e0b' }} />
@@ -64,10 +64,10 @@ export default function SeoAnalyticsPage() {
                             Open Google Analytics <ExternalLink size={14} />
                         </a>
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Google Tag (Ads) */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #22c55e20, #22c55e08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Globe size={18} style={{ color: '#22c55e' }} />
@@ -89,10 +89,10 @@ export default function SeoAnalyticsPage() {
                     <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.75rem' }}>
                         This tag is manually installed in the root layout. To change it, update Settings → Google Tag ID.
                     </p>
-                </motion.div>
+                </m.div>
 
                 {/* Tracking Status */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} style={cardStyle}>
                     <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0a1a0a', marginBottom: '1rem' }}>Tracking Scripts Status</h2>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                         {[
@@ -117,7 +117,7 @@ export default function SeoAnalyticsPage() {
                             </div>
                         ))}
                     </div>
-                </motion.div>
+                </m.div>
             </div>
         </div>
     );

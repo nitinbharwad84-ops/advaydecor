@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { RotateCcw, PackageCheck, Banknote, HelpCircle, Mail, AlertTriangle } from 'lucide-react';
 
 export default function ReturnsPolicyClient() {
@@ -53,14 +53,14 @@ export default function ReturnsPolicyClient() {
                 }} />
 
                 <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                    <motion.span
+                    <m.span
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         style={{ color: '#00b4d8', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}
                     >
                         Policies
-                    </motion.span>
-                    <motion.h1
+                    </m.span>
+                    <m.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -68,15 +68,15 @@ export default function ReturnsPolicyClient() {
                         style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 700, color: '#fff', marginTop: '0.75rem', marginBottom: '1rem' }}
                     >
                         Returns & Exchanges
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}
                     >
                         We stand behind our products. Here is our straightforward guide on returns, exchanges, and refunds.
-                    </motion.p>
+                    </m.p>
                 </div>
             </section>
 
@@ -98,7 +98,7 @@ export default function ReturnsPolicyClient() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                             {sections.map((section, idx) => (
-                                <motion.div
+                                <m.div
                                     key={section.title}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -121,7 +121,7 @@ export default function ReturnsPolicyClient() {
                                     {idx !== sections.length - 1 && (
                                         <div style={{ height: '1px', background: '#f0ece4', marginTop: '3rem', marginLeft: '3.5rem' }} />
                                     )}
-                                </motion.div>
+                                </m.div>
                             ))}
                         </div>
 

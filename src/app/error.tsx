@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { m, LazyMotion, domAnimation } from 'framer-motion';
+import { m } from 'framer-motion';
 import { RefreshCcw, Home, Info, AlertOctagon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -18,8 +18,7 @@ export default function Error({
     }, [error]);
 
     return (
-        <LazyMotion features={domAnimation}>
-            <div className="min-h-[80vh] flex items-center justify-center p-6 bg-gradient-to-b from-[#fdfbf7] to-white overflow-hidden">
+        <div className="min-h-[80vh] flex items-center justify-center p-6 bg-gradient-to-b from-[#fdfbf7] to-white overflow-hidden">
                 <div className="max-w-2xl w-full text-center relative z-10 flex flex-col items-center">
                     <m.div
                         initial={{ opacity: 0, y: 20 }}
@@ -110,6 +109,5 @@ export default function Error({
                     )}
                 </div>
             </div>
-        </LazyMotion>
-    );
+        );
 }

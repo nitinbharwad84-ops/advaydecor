@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { FileText, Save, Loader2, ChevronDown, ChevronUp, Globe } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -111,7 +111,7 @@ export default function SeoMetadataPage() {
                     const isSaving = savingKey === page.page_key;
 
                     return (
-                        <motion.div
+                        <m.div
                             key={page.page_key}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -211,7 +211,7 @@ export default function SeoMetadataPage() {
                                             </div>
                                         </div>
 
-                                        <motion.button
+                                        <m.button
                                             onClick={() => handleSave(page.page_key)}
                                             disabled={isSaving}
                                             style={{
@@ -227,11 +227,11 @@ export default function SeoMetadataPage() {
                                         >
                                             {isSaving ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Save size={16} />}
                                             {isSaving ? 'Saving...' : 'Save Changes'}
-                                        </motion.button>
+                                        </m.button>
                                     </div>
                                 </div>
                             )}
-                        </motion.div>
+                        </m.div>
                     );
                 })}
             </div>

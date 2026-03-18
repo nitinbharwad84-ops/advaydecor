@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, Mail, CheckCircle, AlertCircle, Calendar, Reply, Send, MessageCircle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -175,7 +175,7 @@ export default function AdminFaqQuestionsPage() {
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {filteredQuestions.map((q) => (
-                                <motion.div
+                                <m.div
                                     key={q.id}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -210,7 +210,7 @@ export default function AdminFaqQuestionsPage() {
                                             {q.status.toUpperCase()}
                                         </span>
                                     </div>
-                                </motion.div>
+                                </m.div>
                             ))}
                         </div>
                     )}
@@ -219,7 +219,7 @@ export default function AdminFaqQuestionsPage() {
                 {/* Right Panel: Selected Question Details */}
                 <AnimatePresence>
                     {selectedQuestion && (
-                        <motion.div
+                        <m.div
                             key="selected-question"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -316,7 +316,7 @@ export default function AdminFaqQuestionsPage() {
                                     </div>
                                 )}
                             </div>
-                        </motion.div>
+                        </m.div>
                     )}
                 </AnimatePresence>
             </div>

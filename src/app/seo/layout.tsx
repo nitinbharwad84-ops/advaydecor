@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard,
     FileText,
@@ -173,7 +173,7 @@ export default function SeoLayout({
                 <AnimatePresence>
                     {isSidebarOpen && (
                         <>
-                            <motion.div
+                            <m.div
                                 style={{
                                     position: 'fixed', inset: 0,
                                     background: 'rgba(10,26,10,0.5)', backdropFilter: 'blur(4px)',
@@ -185,7 +185,7 @@ export default function SeoLayout({
                                 exit={{ opacity: 0 }}
                                 onClick={() => setIsSidebarOpen(false)}
                             />
-                            <motion.aside
+                            <m.aside
                                 className="lg:hidden"
                                 style={{
                                     position: 'fixed', left: 0, top: 0, bottom: 0,
@@ -252,7 +252,7 @@ export default function SeoLayout({
                                         Logout
                                     </button>
                                 </div>
-                            </motion.aside>
+                            </m.aside>
                         </>
                     )}
                 </AnimatePresence>

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Search, ExternalLink, CheckCircle, Globe, Link2, FileText } from 'lucide-react';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.advaydecor.in';
@@ -25,7 +25,7 @@ export default function SeoSearchConsolePage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {/* Verification Status */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #22c55e20, #22c55e08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <CheckCircle size={18} style={{ color: '#22c55e' }} />
@@ -46,10 +46,10 @@ export default function SeoSearchConsolePage() {
                     <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.75rem' }}>
                         This verification tag is configured in the root layout metadata.
                     </p>
-                </motion.div>
+                </m.div>
 
                 {/* Sitemap Info */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #8b5cf620, #8b5cf608)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <FileText size={18} style={{ color: '#8b5cf6' }} />
@@ -103,10 +103,10 @@ export default function SeoSearchConsolePage() {
                             View Sitemap <ExternalLink size={14} />
                         </a>
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Quick Tips */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #3b82f620, #3b82f608)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Globe size={18} style={{ color: '#3b82f6' }} />
@@ -128,7 +128,7 @@ export default function SeoSearchConsolePage() {
                             </div>
                         ))}
                     </div>
-                </motion.div>
+                </m.div>
             </div>
         </div>
     );

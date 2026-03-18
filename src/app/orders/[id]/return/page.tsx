@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowLeft, Loader2, RotateCcw, CheckCircle, ShoppingBag } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useUserAuthStore } from '@/lib/auth-store';
@@ -104,7 +104,7 @@ export default function ReturnOrderPage() {
                 <div className="grid grid-cols-1 md:grid-cols-5" style={{ gap: '1.5rem' }}>
 
                     {/* Form — takes 3 cols */}
-                    <motion.div
+                    <m.div
                         className="md:col-span-3"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -199,10 +199,10 @@ export default function ReturnOrderPage() {
                                 </form>
                             </>
                         )}
-                    </motion.div>
+                    </m.div>
 
                     {/* Order Summary — takes 2 cols */}
-                    <motion.div
+                    <m.div
                         className="md:col-span-2"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -230,7 +230,7 @@ export default function ReturnOrderPage() {
                                 <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#00b4d8' }}>{formatCurrency(order.total_amount)}</span>
                             </div>
                         </div>
-                    </motion.div>
+                    </m.div>
                 </div>
             </div>
         </div>

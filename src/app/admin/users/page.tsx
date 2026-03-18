@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Users, Search, Trash2, UserPlus, RefreshCw, Mail, Phone, Clock, FileText, LayoutDashboard, ChevronLeft, ChevronRight, X, PenLine } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -329,7 +329,7 @@ export default function AdminUsersPage() {
             {/* Add User Modal */}
             <AnimatePresence>
                 {isAddOpen && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -339,7 +339,7 @@ export default function AdminUsersPage() {
                             zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem'
                         }}
                     >
-                        <motion.div
+                        <m.div
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
@@ -426,15 +426,15 @@ export default function AdminUsersPage() {
                                     </button>
                                 </div>
                             </form>
-                        </motion.div>
-                    </motion.div>
+                        </m.div>
+                    </m.div>
                 )}
             </AnimatePresence>
 
             {/* Edit User Modal */}
             <AnimatePresence>
                 {isEditOpen && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -444,7 +444,7 @@ export default function AdminUsersPage() {
                             zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem'
                         }}
                     >
-                        <motion.div
+                        <m.div
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
@@ -516,8 +516,8 @@ export default function AdminUsersPage() {
                                     </button>
                                 </div>
                             </form>
-                        </motion.div>
-                    </motion.div>
+                        </m.div>
+                    </m.div>
                 )}
             </AnimatePresence>
         </div>

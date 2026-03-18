@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import {
     Save, UserPlus, Shield, Truck, Image as ImageIcon, Store, Loader2, CreditCard, Smartphone, Building2, Wallet, CalendarClock, Upload, X, ChevronRight, Globe
 } from 'lucide-react';
@@ -279,7 +279,7 @@ export default function AdminSettingsPage() {
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0a0a23' }}>Settings</h1>
                     <p style={{ fontSize: '0.875rem', color: '#9e9eb8', marginTop: '0.25rem' }}>Configure your store settings</p>
                 </div>
-                <motion.button
+                <m.button
                     onClick={handleSave}
                     disabled={isSaving}
                     style={{
@@ -295,12 +295,12 @@ export default function AdminSettingsPage() {
                 >
                     {isSaving ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Save size={16} />}
                     {isSaving ? 'Saving...' : 'Save Changes'}
-                </motion.button>
+                </m.button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {/* Shipping Settings */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Truck size={18} style={{ color: '#fff' }} />
@@ -317,10 +317,10 @@ export default function AdminSettingsPage() {
                             <input type="number" value={freeShippingThreshold} onChange={(e) => setFreeShippingThreshold(e.target.value)} style={inputStyle} />
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Payment Settings */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #22c55e, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Store size={18} style={{ color: '#fff' }} />
@@ -365,7 +365,7 @@ export default function AdminSettingsPage() {
 
                             {/* Sub-methods — only show when Razorpay is enabled */}
                             {razorpayEnabled && (
-                                <motion.div
+                                <m.div
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
@@ -433,7 +433,7 @@ export default function AdminSettingsPage() {
                                             ⚠️ No payment methods enabled. Customers won&apos;t be able to pay online.
                                         </p>
                                     )}
-                                </motion.div>
+                                </m.div>
                             )}
                         </div>
 
@@ -448,10 +448,10 @@ export default function AdminSettingsPage() {
                             </p>
                         )}
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Hero Banner URL */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #8b5cf6, #ec4899)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <ImageIcon size={18} style={{ color: '#fff' }} />
@@ -529,10 +529,10 @@ export default function AdminSettingsPage() {
                             </div>
                         )}
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Add Admin User */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} style={cardStyle}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} style={cardStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '0.5rem', background: 'linear-gradient(135deg, #f59e0b, #f97316)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <UserPlus size={18} style={{ color: '#fff' }} />
@@ -551,7 +551,7 @@ export default function AdminSettingsPage() {
                             <label style={labelStyle}>Password</label>
                             <input type="password" value={newAdminPassword} onChange={(e) => setNewAdminPassword(e.target.value)} style={inputStyle} placeholder="Min 6 characters" />
                         </div>
-                        <motion.button
+                        <m.button
                             type="submit"
                             disabled={isCreatingAdmin}
                             style={{
@@ -574,9 +574,9 @@ export default function AdminSettingsPage() {
                             ) : (
                                 <><UserPlus size={16} /> Create Admin</>
                             )}
-                        </motion.button>
+                        </m.button>
                     </form>
-                </motion.div>
+                </m.div>
             </div>
 
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

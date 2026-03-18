@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import {
     FileText,
     BarChart3,
@@ -80,7 +80,7 @@ export default function SeoDashboardPage() {
                     { label: 'Total Keywords', value: loading ? '...' : stats.totalKeywords, icon: TrendingUp, color: '#3b82f6' },
                     { label: 'Last Updated', value: loading ? '...' : (stats.lastUpdated ? new Date(stats.lastUpdated).toLocaleDateString() : 'Never'), icon: Globe, color: '#f59e0b' },
                 ].map((stat, i) => (
-                    <motion.div
+                    <m.div
                         key={stat.label}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -100,7 +100,7 @@ export default function SeoDashboardPage() {
                         <p style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0a1a0a' }}>
                             {loading ? <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} /> : stat.value}
                         </p>
-                    </motion.div>
+                    </m.div>
                 ))}
             </div>
 
@@ -108,7 +108,7 @@ export default function SeoDashboardPage() {
             <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0a1a0a', marginBottom: '1rem' }}>Quick Access</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                 {quickLinks.map((link, i) => (
-                    <motion.div
+                    <m.div
                         key={link.name}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ export default function SeoDashboardPage() {
                                 <ArrowRight size={16} style={{ color: '#9ca3af', flexShrink: 0 }} />
                             </div>
                         </Link>
-                    </motion.div>
+                    </m.div>
                 ))}
             </div>
 

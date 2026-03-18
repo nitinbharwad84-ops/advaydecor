@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ChevronRight, MapPin, CreditCard, CheckCircle, ShoppingBag, ArrowLeft, Tag, X, Plus, Loader2, LogIn } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
@@ -508,7 +508,7 @@ export default function CheckoutPage() {
     if (!isAuthenticated) {
         return (
             <div style={{ paddingTop: 'var(--nav-height, 80px)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fdfbf7' }}>
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     style={{ textAlign: 'center', padding: '3rem 2rem', maxWidth: '440px', background: '#fff', borderRadius: '1.5rem', border: '1px solid #f0ece4', boxShadow: '0 8px 32px rgba(0,0,0,0.04)' }}
@@ -545,7 +545,7 @@ export default function CheckoutPage() {
                             Back to Cart
                         </Link>
                     </div>
-                </motion.div>
+                </m.div>
             </div>
         );
     }
@@ -617,7 +617,7 @@ export default function CheckoutPage() {
                     <div className={step === 'confirmation' ? "lg:col-span-3" : "lg:col-span-2"}>
                         {/* Shipping Form */}
                         {step === 'shipping' && (
-                            <motion.form
+                            <m.form
                                 onSubmit={handleShippingSubmit}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -780,12 +780,12 @@ export default function CheckoutPage() {
                                     Continue to Payment
                                     <ChevronRight size={16} />
                                 </button>
-                            </motion.form>
+                            </m.form>
                         )}
 
                         {/* Payment Step */}
                         {step === 'payment' && (
-                            <motion.div
+                            <m.div
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 style={{ padding: 'clamp(1.25rem, 3vw, 2rem)', borderRadius: '1rem', background: '#fff', border: '1px solid #f0ece4' }}
@@ -870,12 +870,12 @@ export default function CheckoutPage() {
                                         {isPlacing ? 'Placing Order...' : `Place Order — ${formatCurrency(total)}`}
                                     </button>
                                 </div>
-                            </motion.div>
+                            </m.div>
                         )}
 
                         {/* Confirmation */}
                         {step === 'confirmation' && (
-                            <motion.div
+                            <m.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 style={{
@@ -889,7 +889,7 @@ export default function CheckoutPage() {
                                     boxShadow: '0 20px 40px rgba(0,0,0,0.05)'
                                 }}
                             >
-                                <motion.div
+                                <m.div
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
                                     transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}
@@ -900,7 +900,7 @@ export default function CheckoutPage() {
                                     }}
                                 >
                                     <CheckCircle size={40} style={{ color: '#22c55e' }} />
-                                </motion.div>
+                                </m.div>
 
                                 <h2 className="font-[family-name:var(--font-display)]"
                                     style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 700, color: '#0a0a23', marginBottom: '0.75rem' }}>
@@ -945,7 +945,7 @@ export default function CheckoutPage() {
                                         Back to Home
                                     </Link>
                                 </div>
-                            </motion.div>
+                            </m.div>
                         )}
                     </div>
 
