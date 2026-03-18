@@ -35,6 +35,44 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [verificationStep, setVerificationStep] = useState<'form' | 'otp'>('form');
     const [otp, setOtp] = useState('');
+    const [resendTimer, setResendTimer] = useState(0);
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (resendTimer > 0) {
+            interval = setInterval(() => {
+                setResendTimer((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [resendTimer]);
+
+    const handleResendOTP = async () => {
+        if (resendTimer > 0) return;
+        
+        setIsLoading(true);
+        try {
+            const res = await fetch('/api/auth/otp/send', {
+                method: 'POST',
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.error || 'Failed to resend verification code');
+                return;
+            }
+
+            toast.success('New verification code sent!');
+            setResendTimer(60);
+            setOtp(''); // Clear old OTP
+        } catch (err) {
+            console.error('Resend error:', err);
+            toast.error('Failed to resend code');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,6 +97,7 @@ export default function LoginPage() {
 
                     toast.success('Verification code sent! Check your email.');
                     setVerificationStep('otp');
+                    setResendTimer(60);
                 } else {
                     // --- STEP 2: Verify OTP and Create Confirmed User ---
                     const res = await fetch('/api/auth/otp/verify-and-signup', {
@@ -262,18 +301,35 @@ export default function LoginPage() {
                                             style={{ ...inputStyle, letterSpacing: '0.25rem', fontSize: '1.1rem', textAlign: 'center', paddingLeft: '1rem' }}
                                         />
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setVerificationStep('form')}
-                                        style={{
-                                            background: 'none', border: 'none', color: '#00b4d8', fontSize: '0.75rem',
-                                            fontWeight: 600, cursor: 'pointer', marginTop: '0.75rem', display: 'flex',
-                                            alignItems: 'center', gap: '0.25rem',
-                                        }}
-                                    >
-                                        <ChevronLeft size={14} />
-                                        Change Email / Edit Details
-                                    </button>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.75rem' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setVerificationStep('form')}
+                                            style={{
+                                                background: 'none', border: 'none', color: '#9e9eb8', fontSize: '0.75rem',
+                                                fontWeight: 500, cursor: 'pointer', display: 'flex',
+                                                alignItems: 'center', gap: '0.25rem',
+                                            }}
+                                        >
+                                            <ChevronLeft size={14} />
+                                            Change Details
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={handleResendOTP}
+                                            disabled={resendTimer > 0 || isLoading}
+                                            style={{
+                                                background: 'none', border: 'none', 
+                                                color: resendTimer > 0 ? '#9e9eb8' : '#00b4d8', 
+                                                fontSize: '0.75rem', fontWeight: 600, 
+                                                cursor: resendTimer > 0 ? 'not-allowed' : 'pointer',
+                                                display: 'flex', alignItems: 'center', gap: '0.25rem',
+                                            }}
+                                        >
+                                            {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend Code'}
+                                        </button>
+                                    </div>
                                 </div>
                             </>
                         ) : (

@@ -101,6 +101,7 @@ export default function ProfilePage() {
     const [newEmailInput, setNewEmailInput] = useState('');
     const [emailOtp, setEmailOtp] = useState('');
     const [isEmailLoading, setIsEmailLoading] = useState(false);
+    const [resendTimer, setResendTimer] = useState(0);
 
     // Phone change state
     const [isChangingPhone, setIsChangingPhone] = useState(false);
@@ -121,6 +122,16 @@ export default function ProfilePage() {
         { id: 'support', name: 'Support Messages', icon: MessageSquare },
         { id: 'faq', name: 'My FAQ', icon: HelpCircle },
     ];
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (resendTimer > 0) {
+            interval = setInterval(() => {
+                setResendTimer((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [resendTimer]);
 
     useEffect(() => {
         // Auth check
@@ -288,6 +299,7 @@ export default function ProfilePage() {
             toast.success('Verification code sent to your current email');
             setChangeEmailStep('verify_old');
             setIsChangingEmail(true);
+            setResendTimer(60);
         } catch (error: any) {
             toast.error(error.message || 'Failed to send verification code');
         } finally {
@@ -342,6 +354,7 @@ export default function ProfilePage() {
 
             toast.success('Verification code sent to your new email');
             setChangeEmailStep('verify_new');
+            setResendTimer(60);
         } catch (error: any) {
             toast.error(error.message || 'Failed to send verification code');
         } finally {
@@ -762,6 +775,21 @@ export default function ProfilePage() {
                                                                             {isEmailLoading && <RefreshCw className="animate-spin" size={18} />}
                                                                             Verify Code
                                                                         </button>
+                                                                        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={handleSendOldOtp}
+                                                                                disabled={resendTimer > 0 || isEmailLoading}
+                                                                                style={{
+                                                                                    background: 'none', border: 'none', 
+                                                                                    color: resendTimer > 0 ? '#94a3b8' : '#00b4d8', 
+                                                                                    fontSize: '0.85rem', fontWeight: 600, 
+                                                                                    cursor: resendTimer > 0 ? 'not-allowed' : 'pointer'
+                                                                                }}
+                                                                            >
+                                                                                {resendTimer > 0 ? `Resend code in ${resendTimer}s` : 'Resend Code'}
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 )}
 
@@ -814,6 +842,21 @@ export default function ProfilePage() {
                                                                             {isEmailLoading && <RefreshCw className="animate-spin" size={18} />}
                                                                             Update Email Address
                                                                         </button>
+                                                                        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={handleSendNewOtp}
+                                                                                disabled={resendTimer > 0 || isEmailLoading}
+                                                                                style={{
+                                                                                    background: 'none', border: 'none', 
+                                                                                    color: resendTimer > 0 ? '#94a3b8' : '#00b4d8', 
+                                                                                    fontSize: '0.85rem', fontWeight: 600, 
+                                                                                    cursor: resendTimer > 0 ? 'not-allowed' : 'pointer'
+                                                                                }}
+                                                                            >
+                                                                                {resendTimer > 0 ? `Resend code in ${resendTimer}s` : 'Resend Code'}
+                                                                            </button>
+                                                                        </div>
                                                                         <button
                                                                             onClick={() => setChangeEmailStep('enter_new')}
                                                                             style={{ width: '100%', marginTop: '1rem', background: 'transparent', border: 'none', color: '#64748b', fontSize: '0.9rem', cursor: 'pointer' }}
