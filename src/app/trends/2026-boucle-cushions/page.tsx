@@ -81,7 +81,7 @@ export default function BoucleCushions2026() {
                         }}>
                             {[
                                 'Natural tactile appeal — inviting and cozy',
-                                <span>Pairs beautifully with <Link href="/cushions/linen-covers" style={{ color: '#00b4d8', textDecoration: 'underline' }}>linen and cotton textures</Link></span>,
+                                <span key="pair-text">Pairs beautifully with <Link href="/cushions/linen-covers" style={{ color: '#00b4d8', textDecoration: 'underline' }}>linen and cotton textures</Link></span>,
                                 'Works in both warm and neutral color palettes',
                                 'Durable and long-lasting fabric choice',
                             ].map((point, i) => (

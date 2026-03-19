@@ -28,7 +28,7 @@ export default function ShopClient({ initialProducts, initialCategory = 'All' }:
 
     const sortedProducts = useMemo(() => {
         const query = searchQuery.toLowerCase().trim();
-        let items = initialProducts.filter(
+        const items = initialProducts.filter(
             (p) => {
                 const is_active = p.is_active;
                 const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;

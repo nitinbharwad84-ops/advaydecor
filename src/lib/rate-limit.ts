@@ -12,7 +12,7 @@
  * A bot spamming 100 requests/sec will be stopped instantly (429 Too Many Requests).
  */
 
-import { Redis } from '@upstash/redis';
+import { Redis } from '@upstash/redis/cloudflare';
 import { Ratelimit } from '@upstash/ratelimit';
 
 // -------------------------------------------------------------------------
