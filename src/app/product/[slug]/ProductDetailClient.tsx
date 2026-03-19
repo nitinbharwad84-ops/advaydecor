@@ -238,7 +238,7 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
-                            style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}
+                            style={{ maxWidth: '600px', margin: '0 auto', width: '100%', position: 'relative' }}
                         >
                             <ImageGallery 
                                 images={currentImages} 
@@ -282,7 +282,7 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
-                            style={{ display: 'flex', flexDirection: 'column' }}
+                            style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}
                         >
                             {/* Category, Title & Reviews Summary */}
                             <div style={{ marginBottom: '1.5rem' }}>
@@ -545,7 +545,7 @@ export default function ProductDetailClient({ product, allProducts }: ProductDet
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
-                                style={{ overflow: 'hidden', marginBottom: '3rem' }}
+                                style={{ overflow: 'hidden', marginBottom: '3rem', position: 'relative' }}
                             >
                                 <div style={{ padding: '2rem', background: '#fff', borderRadius: '1rem', border: '1px solid #e2e8f0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}>
                                     <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#0a0a23', marginBottom: '1.5rem' }}>Write your review</h3>

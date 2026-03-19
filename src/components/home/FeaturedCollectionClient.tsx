@@ -13,7 +13,7 @@ const FALLBACK = 'https://images.unsplash.com/photo-1629949009765-40fc74c9ec21?w
 
 export default function FeaturedCollectionClient({ products }: FeaturedCollectionClientProps) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem', position: 'relative' }}>
             {products.map((product, index) => {
                 const mainImage = product.images?.[0]?.image_url || FALLBACK;
                 return (

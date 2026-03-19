@@ -23,6 +23,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-30px' }}
             transition={{ delay: index * 0.08, duration: 0.5 }}
+            style={{ position: 'relative' }}
         >
             <Link href={`/product/${product.slug}`} className="group block">
                 <div style={{
