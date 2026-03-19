@@ -91,7 +91,8 @@ export default function Lightbox({ images, initialIndex, isOpen, onClose }: Ligh
                         position: 'fixed',
                         inset: 0,
                         zIndex: 9999,
-                        background: 'rgba(0, 0, 0, 0.95)',
+                        background: 'rgba(10, 10, 35, 0.4)',
+                        backdropFilter: 'blur(12px)',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -208,11 +209,15 @@ export default function Lightbox({ images, initialIndex, isOpen, onClose }: Ligh
                         onClick={(e) => e.stopPropagation()}
                         style={{
                             position: 'relative',
-                            width: '100%',
-                            maxWidth: '90vw',
-                            maxHeight: '80vh',
+                            width: '90%',
+                            maxWidth: '700px',
+                            maxHeight: '85vh',
                             aspectRatio: '1/1',
                             overflow: 'hidden',
+                            borderRadius: '1.5rem',
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
                         }}
                     >
                         <AnimatePresence mode="wait" custom={direction}>
@@ -244,10 +249,9 @@ export default function Lightbox({ images, initialIndex, isOpen, onClose }: Ligh
                                     src={currentImage.image_url}
                                     alt={`Product view ${currentIndex + 1}`}
                                     style={{
-                                        maxWidth: '100%',
-                                        maxHeight: '80vh',
-                                        objectFit: 'contain',
-                                        borderRadius: '0.75rem',
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
                                         userSelect: 'none',
                                         pointerEvents: 'none',
                                     }}
