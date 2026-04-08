@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
-import { Tag, Plus, Edit, Trash2, X, AlertCircle } from 'lucide-react';
+import { Tag, Plus, Edit, Trash2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Coupon {
@@ -44,9 +44,10 @@ export default function AdminCouponsPage() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Failed to fetch coupons');
             setCoupons(data);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error fetching coupons:', error);
-            if (error.message.includes('relation "coupons" does not exist') || error.message.includes('missing')) {
+            const msg = error instanceof Error ? error.message : '';
+            if (msg.includes('relation "coupons" does not exist') || msg.includes('missing')) {
                 toast.error('Coupons table missing. Please run the SQL migration.', { duration: 5000 });
             } else {
                 toast.error('Failed to load coupons');
@@ -110,8 +111,8 @@ export default function AdminCouponsPage() {
             toast.success(editingCoupon ? 'Coupon updated' : 'Coupon created');
             setIsModalOpen(false);
             fetchCoupons();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'An error occurred');
         }
     };
 

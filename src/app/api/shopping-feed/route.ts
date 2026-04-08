@@ -53,7 +53,7 @@ export async function GET() {
                 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
             },
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error generating product feed:', error);
         return new NextResponse('Internal Server Error', { status: 500 });
     }

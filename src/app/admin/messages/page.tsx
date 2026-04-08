@@ -43,9 +43,10 @@ export default function AdminMessagesPage() {
 
             if (error) throw error;
             setMessages(data || []);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error fetching messages:', error);
-            if (error?.code === 'PGRST205') {
+            const msg = error instanceof Error ? error.message : '';
+            if (error && typeof error === 'object' && 'code' in error && error.code === 'PGRST205') {
                 toast.error('Database table missing. Please run the SQL migration in Supabase.');
             } else {
                 toast.error('Failed to fetch messages');
@@ -266,7 +267,7 @@ export default function AdminMessagesPage() {
                                             {selectedMessage.reply_text}
                                         </div>
                                         <p style={{ fontSize: '0.75rem', color: '#15803d', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                                            <Clock size={12} /> Sent {new Date(selectedMessage.replied_at!).toLocaleString()}
+                                            <Clock size={12} /> Sent {selectedMessage.replied_at ? new Date(selectedMessage.replied_at).toLocaleString() : 'N/A'}
                                         </p>
                                     </div>
                                 ) : (

@@ -61,7 +61,7 @@ export default function AdminDashboard() {
                 setData(null);
                 setLoading(false);
             });
-    }, []);
+    }, [clearAdminAuth, router]);
 
     if (loading) {
         return (

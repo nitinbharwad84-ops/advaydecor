@@ -3,25 +3,60 @@
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { m, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, Mail, CheckCircle, AlertCircle, Calendar, Reply, Send, MessageCircle, X } from 'lucide-react';
+import { Search, Loader2, Mail, CheckCircle, Calendar, Reply, Send, MessageCircle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+
+interface FaqQuestion {
+    id: string;
+    name: string;
+    email: string;
+    question: string;
+    status: 'new' | 'read' | 'replied';
+    created_at: string;
+    answer_text?: string;
+    answered_at?: string;
+}
 
 export default function AdminFaqQuestionsPage() {
     const supabase = createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
-    const [questions, setQuestions] = useState<any[]>([]);
+    const [questions, setQuestions] = useState<FaqQuestion[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
-    const [selectedQuestion, setSelectedQuestion] = useState<any | null>(null);
+    const [selectedQuestion, setSelectedQuestion] = useState<FaqQuestion | null>(null);
     const [replyText, setReplyText] = useState('');
     const [isReplying, setIsReplying] = useState(false);
 
     useEffect(() => {
+        const fetchQuestions = async () => {
+            setLoading(true);
+            try {
+                const { data, error } = await supabase
+                    .from('faq_questions')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    if (error.code === 'PGRST205') {
+                        toast.error('faq_questions table is missing. Please run the SQL schema.', { duration: 5000 });
+                    } else {
+                        throw error;
+                    }
+                }
+                setQuestions((data as FaqQuestion[]) || []);
+            } catch (error: unknown) {
+                console.error('Error fetching questions:', error);
+                toast.error('Failed to load questions');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchQuestions();
-    }, []);
+    }, [supabase]);
 
     const fetchQuestions = async () => {
         setLoading(true);
@@ -38,8 +73,8 @@ export default function AdminFaqQuestionsPage() {
                     throw error;
                 }
             }
-            setQuestions(data || []);
-        } catch (error: any) {
+            setQuestions((data as FaqQuestion[]) || []);
+        } catch (error: unknown) {
             console.error('Error fetching questions:', error);
             toast.error('Failed to load questions');
         } finally {
@@ -72,13 +107,13 @@ export default function AdminFaqQuestionsPage() {
             fetchQuestions(); // Refresh list to update status
         } catch (error: any) {
             console.error(error);
-            toast.error(error.message || 'Error sending reply');
+            toast.error(error instanceof Error ? error.message : 'Error sending reply');
         } finally {
             setIsReplying(false);
         }
     };
 
-    const markAsRead = async (question: any) => {
+    const markAsRead = async (question: FaqQuestion) => {
         setSelectedQuestion(question);
         if (question.status === 'new') {
             try {
@@ -274,7 +309,9 @@ export default function AdminFaqQuestionsPage() {
                                         <div style={{ background: '#fdfbf7', padding: '1.25rem', borderRadius: '0.75rem', fontSize: '0.95rem', color: '#0a0a23', whiteSpace: 'pre-wrap', border: '1px solid #f0ece4', position: 'relative' }}>
                                             <div style={{ position: 'absolute', top: '1rem', right: '1rem', textAlign: 'right' }}>
                                                 <p style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Answered on</p>
-                                                <p style={{ fontSize: '0.8rem', color: '#0a0a23', fontWeight: 500 }}>{new Date(selectedQuestion.answered_at).toLocaleDateString()}</p>
+                                                <p style={{ fontSize: '0.8rem', color: '#0a0a23', fontWeight: 500 }}>
+                                                    {selectedQuestion.answered_at ? new Date(selectedQuestion.answered_at).toLocaleDateString() : 'N/A'}
+                                                </p>
                                             </div>
                                             <p style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.5rem' }}>Your Answer:</p>
                                             {selectedQuestion.answer_text}

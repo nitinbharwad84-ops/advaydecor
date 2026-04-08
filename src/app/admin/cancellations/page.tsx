@@ -92,8 +92,8 @@ export default function AdminCancellationsPage() {
             if (!res.ok) throw new Error('Failed to update');
             toast.success(`Order ${newStatus === 'Cancelled' ? 'cancellation approved' : 'restored to processing'}`);
             await fetchOrders();
-        } catch (err: any) {
-            toast.error(err.message);
+        } catch (err: unknown) {
+            toast.error(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setActionLoading(null);
         }

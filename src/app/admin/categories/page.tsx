@@ -36,8 +36,8 @@ export default function AdminCategories() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Failed to fetch categories');
             setCategories(data);
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'An error occurred');
         } finally {
             setLoading(false);
         }
@@ -68,8 +68,8 @@ export default function AdminCategories() {
             toast.success(`Category ${isUpdate ? 'updated' : 'added'} successfully`);
             setIsModalOpen(false);
             fetchCategories();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'An error occurred');
         } finally {
             setIsSaving(false);
         }
@@ -87,8 +87,8 @@ export default function AdminCategories() {
 
             toast.success('Category deleted');
             fetchCategories();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'An error occurred');
         }
     };
 

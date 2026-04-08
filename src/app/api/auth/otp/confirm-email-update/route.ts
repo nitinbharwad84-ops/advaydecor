@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         }
 
         // 2. Update Email in Auth via Admin SDK (this bypasses manual confirmation emails)
-        const { data: updateData, error: updateError } = await admin.auth.admin.updateUserById(
+        const { error: updateError } = await admin.auth.admin.updateUserById(
             user.id,
             { email: newEmail, email_confirm: true }
         );

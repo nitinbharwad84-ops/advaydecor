@@ -15,6 +15,7 @@ export interface Product {
   description: string | null;
   base_price: number;
   category: string;
+  category_id?: string | null;
   has_variants: boolean;
   is_active: boolean;
   dimensions?: string;

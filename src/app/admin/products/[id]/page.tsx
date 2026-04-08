@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
 import { ArrowLeft, Save, Plus, Trash2, Upload, ImageIcon, Loader2, X } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import type { Product } from '@/types';
@@ -73,7 +74,7 @@ export default function AdminProductEditPage() {
                 }
             })
             .catch(() => {/* ignore */ });
-    }, [isNew]);
+    }, [isNew, form.category]);
 
     // Fetch existing product data
     useEffect(() => {
@@ -90,7 +91,7 @@ export default function AdminProductEditPage() {
                         description: product.description || '',
                         base_price: product.base_price.toString(),
                         category: product.category || '',
-                        category_id: (product as any).category_id || '',
+                        category_id: product.category_id || '',
                         has_variants: product.has_variants,
                         is_active: product.is_active,
                         dimensions: product.dimensions || '',
@@ -528,7 +529,7 @@ export default function AdminProductEditPage() {
                                             transition: 'transform 0.2s, opacity 0.2s'
                                         }}
                                     >
-                                        <img src={img.image_url} alt="" width={200} height={200} style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
+                                        <Image src={img.image_url} alt="Product image" width={200} height={200} style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
                                         <button
                                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeImage(img.id); }}
                                             style={{
