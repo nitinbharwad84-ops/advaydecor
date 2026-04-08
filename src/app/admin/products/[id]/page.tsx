@@ -23,6 +23,18 @@ const cardStyle: React.CSSProperties = {
     padding: '1.5rem', borderRadius: '1rem', background: '#ffffff', border: '1px solid #f0ece4',
 };
 
+const slugify = (text: string) => {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')     // Replace spaces with -
+        .replace(/[^\w-]+/g, '')   // Remove all non-word chars
+        .replace(/--+/g, '-')      // Replace multiple - with single -
+        .replace(/^-+/, '')        // Trim - from start of text
+        .replace(/-+$/, '');       // Trim - from end of text
+};
+
 export default function AdminProductEditPage() {
     const params = useParams();
     const router = useRouter();
@@ -108,8 +120,16 @@ export default function AdminProductEditPage() {
     }, [productId, isNew]);
 
     const handleSave = async () => {
-        if (!form.title || !form.slug || !form.base_price) {
-            toast.error('Please fill in title, slug, and price');
+        // Automatically generate slug from title before saving
+        const generatedSlug = slugify(form.title);
+        
+        if (!form.title || !form.base_price) {
+            toast.error('Please fill in title and price');
+            return;
+        }
+
+        if (!generatedSlug) {
+            toast.error('Invalid title, could not generate a URL slug');
             return;
         }
 
@@ -118,7 +138,7 @@ export default function AdminProductEditPage() {
             const body = {
                 ...(isNew ? {} : { id: productId }),
                 title: form.title,
-                slug: form.slug,
+                slug: generatedSlug,
                 description: form.description,
                 base_price: parseFloat(form.base_price),
                 category: form.category || null,
@@ -389,9 +409,9 @@ export default function AdminProductEditPage() {
                                 <label style={labelStyle}>Product Title *</label>
                                 <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} style={inputStyle} placeholder="e.g., Multicolor Flower Cushion" />
                             </div>
-                            <div>
-                                <label style={labelStyle}>URL Slug *</label>
-                                <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} style={{ ...inputStyle, fontFamily: 'monospace' }} placeholder="multicolor-flower-cushion" />
+                            <div style={{ display: 'none' }}>
+                                <label style={labelStyle}>URL Slug (Auto-generated)</label>
+                                <input value={slugify(form.title)} readOnly style={{ ...inputStyle, background: '#f8fafc', color: '#64748b' }} />
                             </div>
                             <div>
                                 <label style={labelStyle}>Description</label>

@@ -2,6 +2,19 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 
+const slugify = (text: string) => {
+    if (!text) return '';
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')     // Replace spaces with -
+        .replace(/[^\w-]+/g, '')   // Remove all non-word chars
+        .replace(/--+/g, '-')      // Replace multiple - with single -
+        .replace(/^-+/, '')        // Trim - from start of text
+        .replace(/-+$/, '');       // Trim - from end of text
+};
+
 // GET: Fetch all products with variants and images
 export async function GET() {
     try {
@@ -55,12 +68,27 @@ export async function POST(request: Request) {
             dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
         } = body;
 
+        // Ensure slug is clean and matches title
+        const cleanSlug = slugify(slug || title);
+
         // Insert product
         const { data: product, error: productError } = await admin
             .from('products')
             .insert({ 
-                title, slug, description, base_price, category, category_id, has_variants, is_active,
-                dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
+                title, 
+                slug: cleanSlug, 
+                description, 
+                base_price, 
+                category, 
+                category_id, 
+                has_variants, 
+                is_active,
+                dimensions, 
+                material, 
+                filling_material, 
+                construction_details, 
+                care_instructions, 
+                usage_recommendations
             })
             .select()
             .single();
@@ -116,12 +144,27 @@ export async function PUT(request: Request) {
 
         if (!id) return NextResponse.json({ error: 'Product ID required' }, { status: 400 });
 
+        // Ensure slug is clean and matches title
+        const cleanSlug = slugify(slug || title);
+
         // Update product
         const { error: updateError } = await admin
             .from('products')
             .update({ 
-                title, slug, description, base_price, category, category_id, has_variants, is_active,
-                dimensions, material, filling_material, construction_details, care_instructions, usage_recommendations
+                title, 
+                slug: cleanSlug, 
+                description, 
+                base_price, 
+                category, 
+                category_id, 
+                has_variants, 
+                is_active,
+                dimensions, 
+                material, 
+                filling_material, 
+                construction_details, 
+                care_instructions, 
+                usage_recommendations
             })
             .eq('id', id);
 

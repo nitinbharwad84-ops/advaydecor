@@ -43,7 +43,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const paramsObj = await params;
-    const slug = decodeURIComponent(paramsObj.slug);
+    const slug = paramsObj.slug.toLowerCase();
     const { product } = await getProductData(slug);
 
     if (!product) {
@@ -83,7 +83,7 @@ export async function generateMetadata(
 
 export default async function ProductPage({ params }: PageProps) {
     const paramsObj = await params;
-    const slug = decodeURIComponent(paramsObj.slug);
+    const slug = paramsObj.slug.toLowerCase();
     const { product, allProducts } = await getProductData(slug);
 
     if (!product) {
