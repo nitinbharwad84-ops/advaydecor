@@ -24,6 +24,7 @@ import ConditionalNavbar from "@/components/layout/ConditionalNavbar";
 import ConditionalFooter from "@/components/layout/ConditionalFooter";
 import { Toaster } from "react-hot-toast";
 import { FramerProvider } from "@/components/providers/FramerProvider";
+import { isValidTrackingId } from "@/lib/utils";
 
 import Script from 'next/script';
 
@@ -42,7 +43,8 @@ async function getSeoSettings() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSeoSettings();
-  const googleVerification = settings.google_verification || "GVNgZZ_0bSD0QJuRyvEBEbGuNuX1xgZ296vLruj4_JY";
+  const googleVerificationRaw = settings.google_verification || "GVNgZZ_0bSD0QJuRyvEBEbGuNuX1xgZ296vLruj4_JY";
+  const googleVerification = (googleVerificationRaw && isValidTrackingId(googleVerificationRaw, 'verification')) ? googleVerificationRaw : "GVNgZZ_0bSD0QJuRyvEBEbGuNuX1xgZ296vLruj4_JY";
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.advaydecor.in'),
@@ -88,10 +90,15 @@ export default async function RootLayout({
 }>) {
   const settings = await getSeoSettings();
 
-  const ga4Id = settings.ga4_measurement_id || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const gtagId = settings.google_tag_id || "AW-17990232628";
-  const pixelId = settings.meta_pixel_id || process.env.NEXT_PUBLIC_META_PIXEL_ID;
-  const gtmId = settings.google_tag_manager_id;
+  const ga4IdRaw = settings.ga4_measurement_id || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const gtagIdRaw = settings.google_tag_id || "AW-17990232628";
+  const pixelIdRaw = settings.meta_pixel_id || process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  const gtmIdRaw = settings.google_tag_manager_id;
+
+  const ga4Id = (ga4IdRaw && isValidTrackingId(ga4IdRaw, 'ga4')) ? ga4IdRaw : null;
+  const gtagId = (gtagIdRaw && isValidTrackingId(gtagIdRaw, 'gtag')) ? gtagIdRaw : null;
+  const pixelId = (pixelIdRaw && isValidTrackingId(pixelIdRaw, 'pixel')) ? pixelIdRaw : null;
+  const gtmId = (gtmIdRaw && isValidTrackingId(gtmIdRaw, 'gtm')) ? gtmIdRaw : null;
 
   // Primary ID for loading the script
   const primaryTrackingId = ga4Id || gtagId;
