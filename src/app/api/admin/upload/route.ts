@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { generateRandomString } from '@/lib/crypto';
 
 export async function POST(req: Request) {
     try {
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+        const fileName = `${Date.now()}-${generateRandomString(8)}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
 
         // Upload to Supabase Storage (bucket created by schema — no check needed)
         const { data, error } = await admin.storage

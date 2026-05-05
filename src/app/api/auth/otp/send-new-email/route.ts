@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/mail';
+import { generateOTP } from '@/lib/crypto';
 
 export async function POST(request: Request) {
     try {
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
         }
 
         // 2. Generate 8-digit OTP
-        const otp = Math.floor(10000000 + Math.random() * 90000000).toString();
+        const otp = generateOTP(8);
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
         // 3. Save OTP to database
