@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { isValidTrackingId } from '@/lib/utils';
 
 // GET: Fetch all SEO settings
 export async function GET() {
@@ -36,6 +37,22 @@ export async function PUT(request: NextRequest) {
         if (!seoUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
         const body = await request.json();
+
+        // Validate IDs before updating
+        const validationMap: Record<string, 'gtm' | 'ga4' | 'gtag' | 'pixel' | 'verification'> = {
+            google_tag_manager_id: 'gtm',
+            ga4_measurement_id: 'ga4',
+            google_tag_id: 'gtag',
+            meta_pixel_id: 'pixel',
+            google_verification: 'verification',
+        };
+
+        for (const [key, value] of Object.entries(body)) {
+            const type = validationMap[key];
+            if (type && value && !isValidTrackingId(String(value), type)) {
+                return NextResponse.json({ error: `Invalid format for ${key}` }, { status: 400 });
+            }
+        }
 
         const updates = Object.entries(body).map(async ([key, value]) => {
             const { error } = await admin

@@ -46,3 +46,20 @@ export function truncateText(text: string, maxLength: number): string {
 export function cn(...classes: (string | boolean | undefined | null)[]): string {
     return classes.filter(Boolean).join(' ');
 }
+
+/**
+ * Validate tracking IDs to prevent XSS/Injection
+ */
+export function isValidTrackingId(id: string, type: 'gtm' | 'ga4' | 'gtag' | 'pixel' | 'verification'): boolean {
+    if (!id) return false;
+
+    const patterns = {
+        gtm: /^GTM-[A-Z0-9]{4,15}$/,
+        ga4: /^G-[A-Z0-9]{4,15}$/,
+        gtag: /^AW-[0-9]{5,20}$/,
+        pixel: /^[0-9]{10,25}$/,
+        verification: /^[a-zA-Z0-9_-]{20,100}$/
+    };
+
+    return patterns[type].test(id);
+}
