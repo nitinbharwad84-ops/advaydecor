@@ -46,17 +46,17 @@ export async function PUT(request: Request) {
         const body = await request.json();
         // Body is { key: value, key: value, ... }
 
-        const updates = Object.entries(body).map(async ([key, value]) => {
-            const { error } = await admin
-                .from('site_config')
-                .upsert(
-                    { key, value: String(value) },
-                    { onConflict: 'key' }
-                );
-            if (error) throw error;
-        });
+        // Convert object to array of { key, value } for bulk upsert
+        const upsertData = Object.entries(body).map(([key, value]) => ({
+            key,
+            value: String(value)
+        }));
 
-        await Promise.all(updates);
+        const { error } = await admin
+            .from('site_config')
+            .upsert(upsertData, { onConflict: 'key' });
+
+        if (error) throw error;
 
         return NextResponse.json({ success: true });
     } catch (err) {
