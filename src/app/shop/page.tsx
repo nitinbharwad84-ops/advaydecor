@@ -2,12 +2,13 @@ import { Metadata } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import ShopClient from './ShopClient';
 import type { Product } from '@/types';
+import { cache } from 'react';
 
 interface PageProps {
     searchParams: Promise<{ category?: string; q?: string }>;
 }
 
-async function getProducts() {
+const getProducts = cache(async () => {
     const supabase = await createServerSupabaseClient();
     const { data: products } = await supabase
         .from('products')
@@ -16,7 +17,7 @@ async function getProducts() {
         .order('created_at', { ascending: false });
 
     return (products || []) as Product[];
-}
+});
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
     const category = (await searchParams).category;

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import ProductDetailClient from './ProductDetailClient';
 import type { Product } from '@/types';
+import { cache } from 'react';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -11,7 +12,7 @@ interface PageProps {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-async function getProductData(slug: string) {
+const getProductData = cache(async (slug: string) => {
     const supabase = await createServerSupabaseClient();
     
     // Fetch specifically requested product
@@ -36,7 +37,7 @@ async function getProductData(slug: string) {
         .limit(20);
 
     return { product: product as Product, allProducts: (allProducts || []) as Product[] };
-}
+});
 
 export async function generateMetadata(
     { params }: PageProps,
