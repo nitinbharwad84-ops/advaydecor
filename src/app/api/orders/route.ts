@@ -102,21 +102,30 @@ export async function POST(request: Request) {
         const outOfStockItems: string[] = [];
 
         try {
-            for (const item of items) {
-                // Only validate stock for items that have a variant (stock is tracked on variants)
-                if (item.variant_id) {
-                    const { data: variant } = await admin
-                        .from('product_variants')
-                        .select('variant_name, stock_quantity')
-                        .eq('id', item.variant_id)
-                        .single();
+            const variantIds = items
+                .map((item: { variant_id: string | null }) => item.variant_id)
+                .filter(Boolean);
 
-                    if (variant && variant.stock_quantity !== null && variant.stock_quantity < item.quantity) {
-                        const name = `${item.product_title} (${variant.variant_name})`;
-                        if (variant.stock_quantity === 0) {
-                            outOfStockItems.push(`${name} is out of stock`);
-                        } else {
-                            outOfStockItems.push(`${name} — only ${variant.stock_quantity} left in stock`);
+            if (variantIds.length > 0) {
+                const { data: variants } = await admin
+                    .from('product_variants')
+                    .select('id, variant_name, stock_quantity')
+                    .in('id', variantIds);
+
+                if (variants) {
+                    const variantMap = new Map(variants.map((v: { id: string, variant_name: string, stock_quantity: number | null }) => [v.id, v]));
+
+                    for (const item of items) {
+                        if (item.variant_id) {
+                            const variant = variantMap.get(item.variant_id);
+                            if (variant && variant.stock_quantity !== null && variant.stock_quantity < item.quantity) {
+                                const name = `${item.product_title} (${variant.variant_name})`;
+                                if (variant.stock_quantity === 0) {
+                                    outOfStockItems.push(`${name} is out of stock`);
+                                } else {
+                                    outOfStockItems.push(`${name} — only ${variant.stock_quantity} left in stock`);
+                                }
+                            }
                         }
                     }
                 }
